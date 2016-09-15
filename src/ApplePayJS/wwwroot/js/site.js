@@ -1,0 +1,203 @@
+﻿// Copyright (c) Just Eat, 2016. All rights reserved.
+// Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+
+justEat = {
+    applePay: {
+        // Function to handle payment when the Apple Pay button is clicked/pressed.
+        beginPayment: function (e) {
+
+            e.preventDefault();
+
+            // Get the amount to request from the form and set up
+            // the totals and line items for collection and delivery.
+            var subtotal = $("#amount").val();
+            var delivery = "0.01";
+            var deliveryTotal = (Number(subtotal) + Number(delivery)).toString();
+            var storeName = $("meta[name='apple-pay-store-name']").attr("content");
+
+            var totalForCollection = {
+                label: storeName,
+                amount: subtotal
+            };
+
+            var lineItemsForCollection = [
+                { label: "Subtotal", amount: subtotal, type: "final" }
+            ];
+
+            var totalForDelivery = {
+                label: storeName,
+                amount: deliveryTotal
+            };
+
+            var lineItemsForDelivery = [
+                { label: "Subtotal", amount: subtotal, type: "final" },
+                { label: "Delivery", amount: delivery, type: "final" }
+            ];
+
+            // Create the Apple Pay payment request as appropriate.
+            var paymentRequest = {
+                countryCode: "GB",
+                currencyCode: "GBP",
+                merchantCapabilities: [ "supports3DS" ],
+                supportedNetworks: [ "amex", "masterCard", "visa" ],
+                lineItems: lineItemsForDelivery,
+                total: totalForDelivery,
+                requiredBillingContactFields: [ "email", "name", "phone", "postalAddress" ],
+                requiredShippingContactFields: [ "email", "name", "phone", "postalAddress" ],
+                shippingType: "delivery",
+                shippingMethods: [
+                    { label: "Delivery", amount: delivery, identifier: "delivery", detail: "Delivery to you" },
+                    { label: "Collection", amount: "0.00", identifier: "collection", detail: "Collect from the store" }
+                ]
+            };
+
+            // Create the Apple Pay session.
+            var session = new ApplePaySession(1, paymentRequest);
+
+            // Setup handler for validation the merchant session.
+            session.onvalidatemerchant = function (event) {
+
+                // Create the payload.
+                var data = {
+                    validationUrl: event.validationURL
+                };
+
+                // Setup antiforgery HTTP header.
+                var antiforgeryHeader = $("meta[name='x-antiforgery-name']").attr("content");
+                var antiforgeryToken = $("meta[name='x-antiforgery-token']").attr("content");
+
+                var headers = {};
+                headers[antiforgeryHeader] = antiforgeryToken;
+
+                // Post the payload to the server to validate the
+                // merchant session using the merchant certificate.
+                $.ajax({
+                    url: "/home/validate",
+                    method: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    headers: headers
+                }).then(function (merchantSession) {
+                    // Complete validation by passing the merchant session to the Apple Pay session.
+                    session.completeMerchantValidation(merchantSession);
+                });
+            };
+
+            // Setup handler for shipping method selection.
+            session.onshippingmethodselected = function (event) {
+
+                var newTotal;
+                var newLineItems;
+
+                if (event.shippingMethod.identifier === "collection") {
+                    newTotal = totalForCollection;
+                    newLineItems = lineItemsForCollection;
+                } else {
+                    newTotal = totalForDelivery;
+                    newLineItems = lineItemsForDelivery;
+                }
+
+                session.completeShippingMethodSelection(ApplePaySession.STATUS_SUCCESS, newTotal, newLineItems);
+            };
+
+            // Setup handler to receive the token when payment is authorized.
+            session.onpaymentauthorized = function (event) {
+
+                // Get the contact details for use, for example to
+                // use to create an account for the user.
+                var billingContact = event.payment.billingContact;
+                var shippingContact = event.payment.shippingContact;
+
+                // Get the payment data for use to capture funds from
+                // the encrypted Apple Pay token in your server.
+                var token = event.payment.token.paymentData;
+
+                // Apply the details from the Apple Pay sheet to the page.
+                var update = function (panel, contact) {
+
+                    if (contact.emailAddress) {
+                        panel.find(".contact-email")
+                             .text(contact.emailAddress)
+                             .attr("href", "mailto:" + contact.emailAddress)
+                             .append("<br/>")
+                             .removeClass("hide");
+                    }
+
+                    if (contact.emailAddress) {
+                        panel.find(".contact-telephone")
+                             .text(contact.phoneNumber)
+                             .attr("href", "tel:" + contact.phoneNumber)
+                             .append("<br/>")
+                             .removeClass("hide");
+                    }
+
+                    if (contact.givenName) {
+                        panel.find(".contact-name")
+                             .text(contact.givenName + " " + contact.familyName)
+                             .append("<br/>")
+                             .removeClass("hide");
+                    }
+
+                    if (contact.addressLines) {
+                        panel.find(".contact-address-lines").text(contact.addressLines.join(", "));
+                        panel.find(".contact-locality").text(contact.locality);
+                        panel.find(".contact-administrative-area").text(contact.administrativeArea);
+                        panel.find(".contact-postal-code").text(contact.postalCode);
+                        panel.find(".contact-country").text(contact.country);
+                        panel.find(".contact-address").removeClass("hide");
+                    }
+                };
+
+                $(".card-name").text(event.payment.token.paymentMethod.displayName);
+                update($("#billing-contact"), billingContact);
+                update($("#shipping-contact"), shippingContact);
+
+                // Do something with the payment to capture funds and
+                // then dismiss the Apple Pay sheet for the session with
+                // the relevant status code for the payment's authorization.
+                session.completePayment(ApplePaySession.STATUS_SUCCESS);
+
+                justEat.applePay.showSuccess();
+            };
+
+            // Start the session to display the Apple Pay sheet.
+            session.begin();
+        },
+        showButton: function () {
+            var button = $(".apple-pay-button");
+            button.on("click", justEat.applePay.beginPayment);
+            button.removeClass("hide");
+        },
+        showError: function (text) {
+            var error = $(".apple-pay-error");
+            error.text(text);
+            error.removeClass("hide");
+        },
+        showSuccess: function (text) {
+            $(".apple-pay-intro").hide();
+            var success = $(".apple-pay-success");
+            success.removeClass("hide");
+        }
+    }
+};
+
+(function () {
+
+    // Is ApplePaySession available in the browser?
+    if ("ApplePaySession" in window) {
+
+        // Get the merchant identifier from the page meta tags.
+        var merchantIdentifier = $("meta[name='apple-pay-merchant-id']").attr("content");
+
+        // Determine whether the user has an cards provisioned for use with Apple Pay.
+        ApplePaySession.canMakePaymentsWithActiveCard(merchantIdentifier).then(function (canMakePayments) {
+            if (canMakePayments === true) {
+                justEat.applePay.showButton();
+            } else {
+                justEat.applePay.showError("Apple Pay cannot be used at this time. If using macOS Sierra you need to be paired with a device that supports TouchID.");
+            }
+        });
+    } else {
+        justEat.applePay.showError("This device and/or browser does not support Apple Pay.");
+    }
+})();

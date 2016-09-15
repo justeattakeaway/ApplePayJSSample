@@ -1,0 +1,56 @@
+﻿/*
+    Copyright (c) Just Eat, 2016. All rights reserved.
+    Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+*/
+
+body {
+    padding-top: 75px;
+    padding-bottom: 20px;
+}
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+input,
+select,
+textarea {
+    min-width: 200px;
+    max-width: 280px;
+}
+
+div.apple-pay-button {
+    max-width: 325px;
+    width: 100%;
+    height: 46px;
+}
+
+.apple-pay-button {
+    display: inline-block;
+    background-size: 100% 60%;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    border-radius: 5px;
+    padding: 0;
+    box-sizing: border-box;
+    min-width: 200px;
+    min-height: 32px;
+    max-height: 64px;
+}
+
+.apple-pay-button-black {
+    background-image: -webkit-named-image(apple-pay-logo-white);
+    background-color: black;
+}
+
+.apple-pay-button-white {
+    background-image: -webkit-named-image(apple-pay-logo-black);
+    background-color: white;
+}
+
+.apple-pay-button-white-with-line {
+    background-image: -webkit-named-image(apple-pay-logo-black);
+    background-color: white;
+    border: .5px solid black;
+}

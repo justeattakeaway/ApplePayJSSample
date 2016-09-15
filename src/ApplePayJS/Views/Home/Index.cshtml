@@ -1,0 +1,139 @@
+﻿@*
+    Copyright (c) Just Eat, 2016. All rights reserved.
+    Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
+*@
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+@{
+    ViewData["Title"] = "Sample integration";
+    var token = Antiforgery.GetAndStoreTokens(Context);
+}
+
+@section meta {
+    @*
+        Setup antiforgery tokens for the JavaScript.
+    *@
+    <meta name="x-antiforgery-name" content="@token.HeaderName" />
+    <meta name="x-antiforgery-token" content="@token.RequestToken" />
+    @*
+        Add meta tags for Apple Pay discoverability by web crawlers.
+    *@
+    <meta property="product:payment_method" content="ApplePay" />
+    <meta name="payment-country-code" content="GB" />
+    <meta name="payment-currency-code" content="GBP" />
+    @*
+        Add meta tags for use by the JavaScript to access the merchant identifier and store name.
+    *@
+    <meta name="apple-pay-merchant-id" content="@ViewData["MerchantId"]" />
+    <meta name="apple-pay-store-name" content="@ViewData["StoreName"]" />
+    @*
+        Add link tags for the icon to display on a paired
+        device when a payment is started from Safari on macOS.
+    *@
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png" />
+}
+
+@*
+    Display a simple container to collection a numeric value for use in the sheet.
+*@
+<div class="container">
+    <div class="row">
+        <div class="panel panel-primary apple-pay-intro">
+            <div class="panel-heading">
+                Apple Pay JS
+            </div>
+            <div class="panel-body">
+                <p class="lead">
+                    This page demonstrates an integration of <a href="https://developer.apple.com/reference/applepayjs/" target="_blank">Apple Pay JS</a>.
+                </p>
+                <p class="text-justify">
+                    If supported on the current device, you will be able to authorize a payment for the amount entered below.
+                </p>
+                <p class="text-justify">
+                    The Apple Pay token is not used once it is authorized, other than to print the details obtained from the Apple Pay sheet
+                    as a means of demonstrating that access to payment information was granted. You will <strong>not</strong> be charged.
+                </p>
+            </div>
+        </div>
+        @*
+            Used to display a message in browsers where Apple Pay cannot be used.
+        *@
+        <div class="alert alert-warning apple-pay-error hide" role="alert"></div>
+        @*
+            Used to display a message and payment details when an Apple Pay payment is successfully authorized.
+        *@
+        <div class="panel panel-success apple-pay-success hide">
+            <div class="panel-heading">Payment successful</div>
+            <div class="panel-body">
+                <p class="lead">
+                    Your Apple Pay payment was processed successfully using <span class="card-name"></span>.
+                </p>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Billing Contact</div>
+                    <div class="panel-body">
+                        <address id="billing-contact">
+                            <strong class="contact-name hide"></strong>
+                            <a class="contact-email hide" href=""></a>
+                            <a class="contact-telephone hide" href=""></a>
+                            <div class="contact-address hide">
+                                <hr />
+                                <span class="contact-address-lines"></span><br />
+                                <span class="contact-locality"></span><br />
+                                <span class="contact-administrative-area"></span><br />
+                                <span class="contact-postal-code"></span><br />
+                                <span class="contact-country"></span><br />
+                            </div>
+                        </address>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Shipping Contact</div>
+                    <div class="panel-body">
+                        <address id="shipping-contact">
+                            <strong class="contact-name hide"></strong>
+                            <a class="contact-email hide" href=""></a>
+                            <a class="contact-telephone hide" href=""></a>
+                            <div class="contact-address hide">
+                                <hr />
+                                <span class="contact-address-lines"></span><br />
+                                <span class="contact-locality"></span><br />
+                                <span class="contact-administrative-area"></span><br />
+                                <span class="contact-postal-code"></span><br />
+                                <span class="contact-country"></span><br />
+                            </div>
+                        </address>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form>
+            <fieldset class="form-group">
+                <label class="sr-only" for="amount">Amount (in GBP)</label>
+                <div class="input-group input-group-lg">
+                    @*
+                        Add a number input for the amount to charge in the Apple Pay Sheet.
+                    *@
+                    <span class="input-group-addon" id="amount-addon">£</span>
+                    <input type="number"
+                           aria-describedby="amount-addon"
+                           autocomplete="off"
+                           autofocus
+                           class="form-control input-block-level"
+                           id="amount"
+                           min="0.01"
+                           pattern="\d*(.\d\d)?"
+                           placeholder="Amount"
+                           step="0.01"
+                           value="0.01">
+                </div>
+            </fieldset>
+            @*
+                Used to render the Apple Pay button, which is shown if the
+                JavaScript determines that Apple Pay is available for use.
+            *@
+            <div class="apple-pay-button apple-pay-button-black input-block-level hide" />
+        </form>
+    </div>
+</div>
