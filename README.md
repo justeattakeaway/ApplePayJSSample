@@ -1,6 +1,6 @@
 # Apple Pay JS Example Integration
 
-This repository contains a sample implementation of [Apple Pay JS](https://developer.apple.com/reference/applepayjs/) using ASP.NET Core written in C#.
+This repository contains a sample implementation of [Apple Pay JS](https://developer.apple.com/reference/applepayjs/) using ASP.NET Core written in C# and JavaScript.
 
 ## Overview
 
