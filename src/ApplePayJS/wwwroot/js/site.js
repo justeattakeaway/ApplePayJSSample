@@ -189,14 +189,19 @@ justEat = {
         // Get the merchant identifier from the page meta tags.
         var merchantIdentifier = $("meta[name='apple-pay-merchant-id']").attr("content");
 
-        // Determine whether the user has an cards provisioned for use with Apple Pay.
-        ApplePaySession.canMakePaymentsWithActiveCard(merchantIdentifier).then(function (canMakePayments) {
-            if (canMakePayments === true) {
-                justEat.applePay.showButton();
-            } else {
-                justEat.applePay.showError("Apple Pay cannot be used at this time. If using macOS Sierra you need to be paired with a device that supports TouchID.");
-            }
-        });
+        // Determine whether to display the Apple Pay button. See this link for details
+        // on the two different approaches: https://developer.apple.com/reference/applepayjs/applepaysession#2168855
+        if (ApplePaySession.canMakePayments() === true) {
+            justEat.applePay.showButton();
+        } else {
+            ApplePaySession.canMakePaymentsWithActiveCard(merchantIdentifier).then(function (canMakePayments) {
+                if (canMakePayments === true) {
+                    justEat.applePay.showButton();
+                } else {
+                    justEat.applePay.showError("Apple Pay cannot be used at this time. If using macOS Sierra you need to be paired with a device that supports TouchID.");
+                }
+            });
+        }
     } else {
         justEat.applePay.showError("This device and/or browser does not support Apple Pay.");
     }
