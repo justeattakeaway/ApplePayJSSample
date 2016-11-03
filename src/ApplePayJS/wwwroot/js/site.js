@@ -178,11 +178,13 @@ justEat = {
         },
         showButton: function () {
             var button = $("#apple-pay-button");
+            button.attr("lang", justEat.applePay.getPageLanguage());
             button.on("click", justEat.applePay.beginPayment);
             button.removeClass("hide");
         },
         showSetupButton: function () {
             var button = $("#set-up-apple-pay-button");
+            button.attr("lang", justEat.applePay.getPageLanguage());
             button.on("click", justEat.applePay.setupApplePay);
             button.removeClass("hide");
         },
@@ -206,6 +208,9 @@ justEat = {
         },
         supportsSetup: function () {
             return "openPaymentSetup" in ApplePaySession;
+        },
+        getPageLanguage: function () {
+            return $("html").attr("lang") || "en";
         }
     }
 };

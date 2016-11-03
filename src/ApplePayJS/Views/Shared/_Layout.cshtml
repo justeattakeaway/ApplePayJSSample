@@ -3,7 +3,7 @@
     Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 *@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@(Context.Request.Query["lang"].FirstOrDefault() ?? "en")">
 <head>
     <title>@ViewData["Title"] - Apple Pay JS</title>
     <meta charset="utf-8" />
