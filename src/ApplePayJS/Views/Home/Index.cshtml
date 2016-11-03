@@ -133,10 +133,16 @@
                 </div>
             </fieldset>
             @*
+                Used to render the setup Apple Pay button, which is shown if the
+                JavaScript determines that Apple Pay is available, but there are
+                no payment cards set up in Wallet.
+            *@
+            <div id="set-up-apple-pay-button" class="apple-pay apple-pay-set-up-button apple-pay-set-up-button-black input-block-level hide"></div>
+            @*
                 Used to render the Apple Pay button, which is shown if the
                 JavaScript determines that Apple Pay is available for use.
             *@
-            <div class="apple-pay-button apple-pay-button-black input-block-level hide" />
+            <div id="apple-pay-button" class="apple-pay apple-pay-button apple-pay-button-black input-block-level hide"></div>
         </form>
     </div>
 </div>
