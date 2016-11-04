@@ -163,10 +163,44 @@ justEat = {
             // Start the session to display the Apple Pay sheet.
             session.begin();
         },
+        setupApplePay: function (merchantIdentifier) {
+            ApplePaySession.openPaymentSetup(merchantIdentifier)
+                .then(function (success) {
+                    if (success) {
+                        justEat.applePay.hideSetupButton();
+                        justEat.applePay.showButton();
+                    } else {
+                        justEat.applePay.showError("Failed to set up Apple Pay.");
+                    }
+                }).catch(function (e) {
+                    justEat.applePay.showError("Failed to set up Apple Pay. " + e);
+                });
+        },
         showButton: function () {
-            var button = $(".apple-pay-button");
+            var button = $("#apple-pay-button");
+            button.attr("lang", justEat.applePay.getPageLanguage());
             button.on("click", justEat.applePay.beginPayment);
+
+            if (justEat.applePay.supportsSetup()) {
+                button.addClass("apple-pay-button-with-text");
+                button.addClass("apple-pay-button-black-with-text");
+            } else {
+                button.addClass("apple-pay-button");
+                button.addClass("apple-pay-button-black");
+            }
+
             button.removeClass("hide");
+        },
+        showSetupButton: function () {
+            var button = $("#set-up-apple-pay-button");
+            button.attr("lang", justEat.applePay.getPageLanguage());
+            button.on("click", justEat.applePay.setupApplePay);
+            button.removeClass("hide");
+        },
+        hideSetupButton: function () {
+            var button = $("#set-up-apple-pay-button");
+            button.addClass("hide");
+            button.off("click");
         },
         showError: function (text) {
             var error = $(".apple-pay-error");
@@ -177,6 +211,15 @@ justEat = {
             $(".apple-pay-intro").hide();
             var success = $(".apple-pay-success");
             success.removeClass("hide");
+        },
+        supportedByDevice: function () {
+            return "ApplePaySession" in window;
+        },
+        supportsSetup: function () {
+            return "openPaymentSetup" in ApplePaySession;
+        },
+        getPageLanguage: function () {
+            return $("html").attr("lang") || "en";
         }
     }
 };
@@ -184,7 +227,7 @@ justEat = {
 (function () {
 
     // Is ApplePaySession available in the browser?
-    if ("ApplePaySession" in window) {
+    if (justEat.applePay.supportedByDevice()) {
 
         // Get the merchant identifier from the page meta tags.
         var merchantIdentifier = $("meta[name='apple-pay-merchant-id']").attr("content");
@@ -198,7 +241,11 @@ justEat = {
                 if (canMakePayments === true) {
                     justEat.applePay.showButton();
                 } else {
-                    justEat.applePay.showError("Apple Pay cannot be used at this time. If using macOS Sierra you need to be paired with a device that supports TouchID.");
+                    if (justEat.applePay.supportsSetup()) {
+                        justEat.applePay.showSetupButton(merchantIdentifier);
+                    } else {
+                        justEat.applePay.showError("Apple Pay cannot be used at this time. If using macOS Sierra you need to be paired with a device that supports TouchID.");
+                    }
                 }
             });
         }

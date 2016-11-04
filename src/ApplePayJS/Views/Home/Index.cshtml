@@ -8,6 +8,12 @@
 @{
     ViewData["Title"] = "Sample integration";
     var token = Antiforgery.GetAndStoreTokens(Context);
+
+    var region = new System.Globalization.RegionInfo("en-GB");
+
+    var countryCode = region.TwoLetterISORegionName;
+    var currencyCode = region.ISOCurrencySymbol;
+    var currencySymbol = region.CurrencySymbol;
 }
 
 @section meta {
@@ -20,8 +26,8 @@
         Add meta tags for Apple Pay discoverability by web crawlers.
     *@
     <meta property="product:payment_method" content="ApplePay" />
-    <meta name="payment-country-code" content="GB" />
-    <meta name="payment-currency-code" content="GBP" />
+    <meta name="payment-country-code" content="@countryCode" />
+    <meta name="payment-currency-code" content="@currencyCode" />
     @*
         Add meta tags for use by the JavaScript to access the merchant identifier and store name.
     *@
@@ -113,12 +119,12 @@
         </div>
         <form>
             <fieldset class="form-group">
-                <label class="sr-only" for="amount">Amount (in GBP)</label>
+                <label class="sr-only" for="amount">Amount (in @currencyCode)</label>
                 <div class="input-group input-group-lg">
                     @*
                         Add a number input for the amount to charge in the Apple Pay Sheet.
                     *@
-                    <span class="input-group-addon" id="amount-addon">£</span>
+                    <span class="input-group-addon" id="amount-addon">@currencySymbol</span>
                     <input type="number"
                            aria-describedby="amount-addon"
                            autocomplete="off"
@@ -133,10 +139,16 @@
                 </div>
             </fieldset>
             @*
+                Used to render the setup Apple Pay button, which is shown if the
+                JavaScript determines that Apple Pay is available, but there are
+                no payment cards set up in Wallet.
+            *@
+            <div id="set-up-apple-pay-button" class="apple-pay apple-pay-set-up-button apple-pay-set-up-button-black input-block-level hide"></div>
+            @*
                 Used to render the Apple Pay button, which is shown if the
                 JavaScript determines that Apple Pay is available for use.
             *@
-            <div class="apple-pay-button apple-pay-button-black input-block-level hide" />
+            <div id="apple-pay-button" class="apple-pay input-block-level hide"></div>
         </form>
     </div>
 </div>
