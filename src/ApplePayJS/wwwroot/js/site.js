@@ -180,6 +180,15 @@ justEat = {
             var button = $("#apple-pay-button");
             button.attr("lang", justEat.applePay.getPageLanguage());
             button.on("click", justEat.applePay.beginPayment);
+
+            if (justEat.applePay.supportsSetup()) {
+                button.addClass("apple-pay-button-with-text");
+                button.addClass("apple-pay-button-black-with-text");
+            } else {
+                button.addClass("apple-pay-button");
+                button.addClass("apple-pay-button-black");
+            }
+
             button.removeClass("hide");
         },
         showSetupButton: function () {
