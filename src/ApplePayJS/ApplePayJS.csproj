@@ -17,8 +17,8 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
-    <RuntimeFrameworkVersion>1.0.3</RuntimeFrameworkVersion>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <UserSecretsId>JustEat.ApplePayJS</UserSecretsId>
     <VersionPrefix>1.0.1</VersionPrefix>
     <VersionSuffix></VersionSuffix>
@@ -29,19 +29,19 @@
     <Content Update="*.pfx" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.1.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.0.1" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
@@ -49,7 +49,7 @@
     <Exec Command="dotnet bundle" />
   </Target>
   <ItemGroup>
-    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.301" />
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.306" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0-msbuild3-final" />
   </ItemGroup>
 </Project>
