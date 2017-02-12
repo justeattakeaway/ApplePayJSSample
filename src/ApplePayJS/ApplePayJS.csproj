@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <Authors>Martin Costello</Authors>
+    <AssemblyName>JustEat.ApplePayJS</AssemblyName>
+    <Company>Just Eat</Company>
+    <Copyright>Just Eat (c) 2016-2017</Copyright>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <OutputType>Exe</OutputType>
+    <PackageIconUrl>https://avatars3.githubusercontent.com/u/1516790?v=3&amp;s=100</PackageIconUrl>
+    <PackageId>JustEat.ApplePayJS</PackageId>
+    <PackageProjectUrl>https://github.com/justeat/ApplePayJSSample</PackageProjectUrl>
+    <PackageLicenseUrl>$(PackageProjectUrl)/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>applepay</PackageTags>
+    <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
+    <RuntimeFrameworkVersion>1.0.3</RuntimeFrameworkVersion>
+    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <UserSecretsId>JustEat.ApplePayJS</UserSecretsId>
+    <VersionPrefix>1.0.1</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Update="appsettings.json;appsettings.*.json;web.config" CopyToPublishDirectory="PreserveNewest" />
+    <Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views" CopyToPublishDirectory="PreserveNewest" />
+    <Content Update="*.pfx" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.0.1" />
+  </ItemGroup>
+  <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
+    <Exec Command="bower install" />
+    <Exec Command="dotnet bundle" />
+  </Target>
+  <ItemGroup>
+    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.301" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0-msbuild3-final" />
+  </ItemGroup>
+</Project>
