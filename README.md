@@ -19,6 +19,7 @@ The key components to look at for the implementation are:
 
 To setup the repository to run the sample, perform the steps below:
 
+  1. Install the [.NET Core 1.0.0 RC4 SDK](https://github.com/dotnet/core/blob/master/release-notes/rc4-download.md).
   1. Fork this repository.
   1. Clone the repository from your fork to your local machine: ```git clone https://github.com/{username}/ApplePayJSSample.git```
   1. [Follow the steps](https://developer.apple.com/reference/applepayjs#2193397) to obtain your Apple Pay Merchant ID, Payment Processing Certificate, Domain Verification file and Merchant Identity Certificate if you do not already have them.
@@ -36,6 +37,10 @@ To setup the repository to run the sample, perform the steps below:
   1. Verify the domain in the [Apple Developer Portal](https://developer.apple.com/account/).
 
 You should now be able to perform Apple Pay JS transactions on the deployed application.
+
+## Local Debugging
+
+You should be able to debug the application in [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio 2017 RC](https://www.visualstudio.com/downloads/).
 
 ## Feedback
 
