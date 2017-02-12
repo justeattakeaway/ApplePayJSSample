@@ -5,13 +5,20 @@ namespace JustEat.ApplePayJS
 {
     using System.IO;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
 
     public static class Program
     {
         public static void Main(string[] args)
         {
+            var configuration = new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddCommandLine(args)
+                .Build();
+
             var host = new WebHostBuilder()
                 .UseKestrel(options => options.AddServerHeader = false)
+                .UseConfiguration(configuration)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
