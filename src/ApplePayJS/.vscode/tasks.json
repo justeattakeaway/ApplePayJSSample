@@ -7,7 +7,7 @@
     {
       "taskName": "build",
       "args": [
-        "${workspaceRoot}\\project.json"
+        "${workspaceRoot}\\ApplePayJS.csproj"
       ],
       "isBuildCommand": true,
       "problemMatcher": "$msCompile"
