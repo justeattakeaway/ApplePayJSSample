@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <Authors>Martin Costello</Authors>
     <AssemblyName>JustEat.ApplePayJS</AssemblyName>
@@ -46,7 +46,6 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink.Loader" Version="14.0.1" />
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
-    <Exec Command="bower install" />
     <Exec Command="dotnet bundle" />
   </Target>
   <ItemGroup>
