@@ -116,7 +116,7 @@ namespace JustEat.ApplePayJS.Controllers
 
                     var certificates = store.Certificates.Find(
                         X509FindType.FindByThumbprint,
-                        _options.MerchantCertificateThumbprint,
+                        _options.MerchantCertificateThumbprint?.Trim(),
                         validOnly: false);
 
                     if (certificates.Count < 1)
