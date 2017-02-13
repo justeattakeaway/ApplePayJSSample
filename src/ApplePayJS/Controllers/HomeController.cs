@@ -114,18 +114,33 @@ namespace JustEat.ApplePayJS.Controllers
                 {
                     store.Open(OpenFlags.ReadOnly);
 
-                    certificate = store.Certificates.Find(
+                    var certificates = store.Certificates.Find(
                         X509FindType.FindByThumbprint,
-                        _options.MerchantCertificateThumbprint,
-                        validOnly: false)[0];
+                        _options.MerchantCertificateThumbprint?.Trim(),
+                        validOnly: false);
+
+                    if (certificates.Count < 1)
+                    {
+                        throw new InvalidOperationException(
+                            $"Could not find Apple Pay merchant certificate with thumbprint '{_options.MerchantCertificateThumbprint}' from store '{store.Name}' in location '{store.Location}'.");
+                    }
+
+                    certificate = certificates[0];
                 }
             }
             else
             {
-                // Load the X.509 certificate from disk
-                certificate = new X509Certificate2(
-                    _options.MerchantCertificateFileName,
-                    _options.MerchantCertificatePassword);
+                try
+                {
+                    // Load the X.509 certificate from disk
+                    certificate = new X509Certificate2(
+                        _options.MerchantCertificateFileName,
+                        _options.MerchantCertificatePassword);
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Failed to load Apple Pay merchant certificate file from '{_options.MerchantCertificateFileName}'.", ex);
+                }
             }
 
             return certificate;
