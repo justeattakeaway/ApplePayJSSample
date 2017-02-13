@@ -42,6 +42,18 @@ You should now be able to perform Apple Pay JS transactions on the deployed appl
 
 You should be able to debug the application in [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio 2017 RC](https://www.visualstudio.com/downloads/).
 
+## Azure App Service Deployment
+
+If you are deploying the sample application to a Microsoft Azure App Service Web App, you will need to make the following configuration changes to your Web App for the sample application to run correctly:
+
+  * Navigate to the _SSL certificates_ tab of your Web App and upload your Apple Merchant certificate as a ```.pfx``` file, making a note of the _THUMBPRINT_ value.
+  * Navigate to the _Application settings_ tab of your Web App and add the following settings:
+    * **WEBSITE_LOAD_CERTIFICATES** to the value of _THUMBPRINT_ you noted above.
+    * **ApplePay:MerchantCertificateThumbprint** to the value of _THUMBPRINT_ you noted above.
+    * **ApplePay:UseCertificateStore** to the value of _true_.
+    * Save the changes.
+  * Ensure the hostname you are using (either ```{yourappname}.azurewebsites.net``` or a custom hostname that you have set up) has been added in the Apple Developer portal to your merchant Id and you've added the Apple Pay domain validation file as described in the _Setup_ section above.
+
 ## Feedback
 
 Any feedback or issues can be added to the [issues](https://github.com/justeat/ApplePayJSSample/issues) for this project in GitHub.
