@@ -17,7 +17,7 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl).git</RepositoryUrl>
-    <RuntimeFrameworkVersion>1.1.0</RuntimeFrameworkVersion>
+    <RootNamespace>JustEat.ApplePayJS</RootNamespace>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <UserSecretsId>JustEat.ApplePayJS</UserSecretsId>
     <VersionPrefix>1.0.1</VersionPrefix>
@@ -50,6 +50,6 @@
   </Target>
   <ItemGroup>
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.306" />
-    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0-msbuild3-final" />
+    <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0" />
   </ItemGroup>
 </Project>
