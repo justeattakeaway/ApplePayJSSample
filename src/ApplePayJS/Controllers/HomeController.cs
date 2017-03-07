@@ -37,11 +37,9 @@ namespace JustEat.ApplePayJS.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> Validate([FromBody] ValidateMerchantSessionModel model)
         {
-            Uri requestUri;
-
             if (!ModelState.IsValid ||
                 string.IsNullOrWhiteSpace(model?.ValidationUrl) ||
-                !Uri.TryCreate(model.ValidationUrl, UriKind.Absolute, out requestUri))
+                !Uri.TryCreate(model.ValidationUrl, UriKind.Absolute, out Uri requestUri))
             {
                 return BadRequest();
             }
