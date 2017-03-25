@@ -21,7 +21,7 @@ namespace justEat {
             this.merchantIdentifier = $("meta[name='apple-pay-merchant-id']").attr("content");
 
             // Set the Apple Pay JS version to use
-            this.applePayVersion = 1;
+            this.applePayVersion = 2;
         }
 
         /**
@@ -89,7 +89,7 @@ namespace justEat {
                 countryCode: "GB",
                 currencyCode: "GBP",
                 merchantCapabilities: ["supports3DS"],
-                supportedNetworks: ["amex", "masterCard", "visa"],
+                supportedNetworks: ["amex", "discover", "jcb", "masterCard", "privateLabel", "visa"],
                 lineItems: lineItemsForDelivery,
                 total: totalForDelivery,
                 requiredBillingContactFields: ["email", "name", "phone", "postalAddress"],
@@ -102,7 +102,7 @@ namespace justEat {
             };
 
             // Create the Apple Pay session.
-            let session = new ApplePaySession(1, paymentRequest);
+            let session = new ApplePaySession(this.applePayVersion, paymentRequest);
 
             // Setup handler for validation the merchant session.
             session.onvalidatemerchant = function (event) {
