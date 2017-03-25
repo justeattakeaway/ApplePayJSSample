@@ -2,11 +2,13 @@
   "compileOnSave": true,
   "compilerOptions": {
     "inlineSourceMap": true,
+    "lib": [ "dom", "es6" ],
+    "module": "commonjs",
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noEmitOnError": true,
     "removeComments": true,
-    "target": "es6"
+    "target": "es5"
   },
   "exclude": [
     "bin",
