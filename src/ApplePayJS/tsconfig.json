@@ -9,6 +9,7 @@
     "target": "es6"
   },
   "exclude": [
+    "bin",
     "node_modules",
     "obj"
   ]
