@@ -102,7 +102,7 @@ namespace justEat {
             };
 
             // Create the Apple Pay session.
-            let session = new ApplePayJS.ApplePaySession(1, paymentRequest);
+            let session = new ApplePaySession(1, paymentRequest);
 
             // Setup handler for validation the merchant session.
             session.onvalidatemerchant = function (event) {
@@ -147,7 +147,7 @@ namespace justEat {
                     newLineItems = lineItemsForDelivery;
                 }
 
-                session.completeShippingMethodSelection(ApplePayJS.ApplePaySession.STATUS_SUCCESS, newTotal, newLineItems);
+                session.completeShippingMethodSelection(ApplePaySession.STATUS_SUCCESS, newTotal, newLineItems);
             };
 
             // Setup handler to receive the token when payment is authorized.
@@ -205,7 +205,7 @@ namespace justEat {
                 // Do something with the payment to capture funds and
                 // then dismiss the Apple Pay sheet for the session with
                 // the relevant status code for the payment's authorization.
-                session.completePayment(ApplePayJS.ApplePaySession.STATUS_SUCCESS);
+                session.completePayment(ApplePaySession.STATUS_SUCCESS);
 
                 this.showSuccess();
             };
@@ -219,7 +219,7 @@ namespace justEat {
          * @returns true if the device supports making payments with Apple Pay; otherwise, false.
          */
         private canMakePayments(): boolean {
-            return ApplePayJS.ApplePaySession.canMakePayments();
+            return ApplePaySession.canMakePayments();
         }
 
         /**
@@ -227,7 +227,7 @@ namespace justEat {
          * @returns true if the device supports Apple Pay and there is at least one active card in Wallet; otherwise, false.
          */
         private canMakePaymentsWithActiveCard(): Promise<boolean> {
-            return ApplePayJS.ApplePaySession.canMakePaymentsWithActiveCard(this.merchantIdentifier);
+            return ApplePaySession.canMakePaymentsWithActiveCard(this.merchantIdentifier);
         }
 
         /**
@@ -248,7 +248,7 @@ namespace justEat {
         }
 
         private setupApplePay = (): Promise<boolean> => {
-            return ApplePayJS.ApplePaySession.openPaymentSetup(this.merchantIdentifier)
+            return ApplePaySession.openPaymentSetup(this.merchantIdentifier)
                 .then((success) => {
                     if (success) {
                         this.hideSetupButton();
@@ -319,7 +319,7 @@ namespace justEat {
          * @returns Whether setting up Apple Pay is supported.
          */
         private supportsSetup(): boolean {
-            return "openPaymentSetup" in ApplePayJS.ApplePaySession;
+            return "openPaymentSetup" in ApplePaySession;
         }
     }
 }
