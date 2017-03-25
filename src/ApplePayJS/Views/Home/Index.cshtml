@@ -4,6 +4,7 @@
 *@
 
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@inject Microsoft.Extensions.Configuration.IConfiguration Config
 
 @{
     ViewData["Title"] = "Sample integration";
@@ -152,3 +153,23 @@
         </form>
     </div>
 </div>
+@section scripts {
+    @if (string.Equals(Config["UseTypeScript"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
+    {
+        <environment names="Development">
+            <script src="~/ts/site.js" asp-append-version="true"></script>
+        </environment>
+        <environment names="Staging,Production">
+            <script src="~/ts/site.min.js" asp-append-version="true"></script>
+        </environment>
+    }
+    else
+    {
+        <environment names="Development">
+            <script src="~/js/site.js" asp-append-version="true"></script>
+        </environment>
+        <environment names="Staging,Production">
+            <script src="~/js/site.min.js" asp-append-version="true"></script>
+        </environment>
+    }
+}

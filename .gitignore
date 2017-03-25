@@ -1,4 +1,4 @@
-.DS_Store
+﻿.DS_Store
 .metadata
 .settings
 .vs
@@ -20,6 +20,7 @@ src/ApplePayJS/*.pfx
 src/ApplePayJS/wwwroot/.well-known/*
 src/ApplePayJS/wwwroot/**/*.min.css
 src/ApplePayJS/wwwroot/**/*.min.js
+src/ApplePayJS/wwwroot/ts/*.js
 src/ApplePayJS/wwwroot/lib/*
 TestResults
 UpgradeLog*.htm
@@ -28,6 +29,7 @@ PublishProfiles
 *.DotSettings
 *.GhostDoc.xml
 *.log
+*.map
 *.nupkg
 *.opensdf
 *.[Pp]ublish.xml

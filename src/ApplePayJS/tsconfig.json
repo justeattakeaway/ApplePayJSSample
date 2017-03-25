@@ -1,0 +1,15 @@
+﻿{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "inlineSourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noEmitOnError": true,
+    "removeComments": true,
+    "target": "es6"
+  },
+  "exclude": [
+    "node_modules",
+    "obj"
+  ]
+}
