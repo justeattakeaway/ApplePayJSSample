@@ -26,7 +26,7 @@
   <ItemGroup>
     <Content Update="appsettings.json;appsettings.*.json;web.config" CopyToPublishDirectory="PreserveNewest" />
     <Content Update="wwwroot\**\*;Views\**\*;Areas\**\Views" CopyToPublishDirectory="PreserveNewest" />
-    <Content Update="*.pfx" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="*.pfx" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="1.1.0" />
@@ -47,6 +47,11 @@
   </ItemGroup>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="dotnet bundle" />
+  </Target>
+  <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths" DependsOnTargets="PrepareForPublish">
+    <ItemGroup>
+      <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
+    </ItemGroup>
   </Target>
   <ItemGroup>
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.2.306" />
