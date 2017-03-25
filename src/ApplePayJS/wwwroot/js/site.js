@@ -207,7 +207,7 @@ justEat = {
             error.text(text);
             error.removeClass("hide");
         },
-        showSuccess: function (text) {
+        showSuccess: function () {
             $(".apple-pay-intro").hide();
             var success = $(".apple-pay-success");
             success.removeClass("hide");
