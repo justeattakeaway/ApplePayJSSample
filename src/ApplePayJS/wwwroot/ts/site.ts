@@ -311,7 +311,7 @@ namespace justEat {
          * @returns Whether Apple Pay is supported.
          */
         private supportedByDevice(): boolean {
-            return "ApplePaySession" in Window;
+            return "ApplePaySession" in window;
         }
 
         /**
