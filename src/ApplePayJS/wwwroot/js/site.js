@@ -72,7 +72,7 @@ justEat = {
                 // Post the payload to the server to validate the
                 // merchant session using the merchant certificate.
                 $.ajax({
-                    url: "/home/validate",
+                    url: $("link[rel='merchant-validation']").attr("href"),
                     method: "POST",
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(data),

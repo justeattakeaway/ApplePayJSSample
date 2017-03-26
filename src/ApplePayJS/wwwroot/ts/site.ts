@@ -15,6 +15,7 @@ namespace justEat {
         private countryCode: string;
         private currencyCode: string;
         private session: ApplePaySession;
+        private validationResource: string;
 
         /**
          * Initializes a new instance of the justEat.ApplePay class.
@@ -24,6 +25,9 @@ namespace justEat {
             // Get the merchant identifier and store display name from the page meta tags.
             this.merchantIdentifier = $("meta[name='apple-pay-merchant-id']").attr("content");
             this.storeName = $("meta[name='apple-pay-store-name']").attr("content");
+
+            // Get the URL to POST to for Apple Pay merchant validation
+            this.validationResource = $("link[rel='merchant-validation']").attr("href");
 
             // Set the Apple Pay JS version to use
             this.applePayVersion = 2;
@@ -284,15 +288,15 @@ namespace justEat {
          * @param data - The request data.
          * @param headers - The request headers.
          */
-        private createValidationRequest(data: any, headers: any): JQueryAjaxSettings {
+        private createValidationRequest = (data: any, headers: any): JQueryAjaxSettings => {
             return {
-                url: "/home/validate",
+                url: this.validationResource,
                 method: "POST",
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(data),
                 headers: headers
             };
-        };
+        }
 
         /**
          * Event handler for setting up Apple Pay.

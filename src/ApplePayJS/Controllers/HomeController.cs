@@ -35,6 +35,7 @@ namespace JustEat.ApplePayJS.Controllers
 
         [HttpPost]
         [Produces("application/json")]
+        [Route("applepay/validate", Name = "MerchantValidation")]
         public async Task<IActionResult> Validate([FromBody] ValidateMerchantSessionModel model)
         {
             if (!ModelState.IsValid ||

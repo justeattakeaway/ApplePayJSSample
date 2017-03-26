@@ -18,22 +18,31 @@
 }
 
 @section meta {
+
     @*
         Setup antiforgery tokens for the JavaScript.
     *@
     <meta name="x-antiforgery-name" content="@token.HeaderName" />
     <meta name="x-antiforgery-token" content="@token.RequestToken" />
+
     @*
         Add meta tags for Apple Pay discoverability by web crawlers.
     *@
     <meta property="product:payment_method" content="ApplePay" />
     <meta name="payment-country-code" content="@countryCode" />
     <meta name="payment-currency-code" content="@currencyCode" />
+
     @*
         Add meta tags for use by the JavaScript to access the merchant identifier and store name.
     *@
     <meta name="apple-pay-merchant-id" content="@ViewData["MerchantId"]" />
     <meta name="apple-pay-store-name" content="@ViewData["StoreName"]" />
+
+    @*
+        Add link for use by the JavaScript to get the URL to POST to for merchant validation.
+    *@
+    <link rel="merchant-validation" href="@Url.RouteUrl("MerchantValidation")" />
+
     @*
         Add link tags for the icon to display on a paired
         device when a payment is started from Safari on macOS.
