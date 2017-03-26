@@ -9,19 +9,28 @@ namespace justEat {
     export class ApplePay {
 
         public merchantIdentifier: string;
+        public storeName: string;
 
         private applePayVersion: number;
+        private countryCode: string;
+        private currencyCode: string;
+        private session: ApplePaySession;
 
         /**
          * Initializes a new instance of the justEat.ApplePay class.
          */
         public constructor() {
 
-            // Get the merchant identifier from the page meta tags.
+            // Get the merchant identifier and store display name from the page meta tags.
             this.merchantIdentifier = $("meta[name='apple-pay-merchant-id']").attr("content");
+            this.storeName = $("meta[name='apple-pay-store-name']").attr("content");
 
             // Set the Apple Pay JS version to use
             this.applePayVersion = 2;
+
+            // Set the appropriate ISO country and currency codes
+            this.countryCode = "GB";
+            this.currencyCode = "GBP";
         }
 
         /**
@@ -36,11 +45,13 @@ namespace justEat {
                 // on the two different approaches: https://developer.apple.com/reference/applepayjs/applepaysession#2168855
                 if (this.canMakePayments() === true) {
                     this.showButton();
-                } else {
-                    this.canMakePaymentsWithActiveCard().then((canMakePayments: boolean) => {
+                }
+                else {
+                    this.canMakePaymentsWithActiveCard().then((canMakePayments) => {
                         if (canMakePayments === true) {
                             this.showButton();
-                        } else {
+                        }
+                        else {
                             if (this.supportsSetup()) {
                                 this.showSetupButton();
                             } else {
@@ -49,169 +60,91 @@ namespace justEat {
                         }
                     });
                 }
-            } else {
+            }
+            else {
                 this.showError("This device and/or browser does not support Apple Pay.");
             }
         }
 
+        /**
+         * Handles the Apple Pay button being pressed.
+         * @param e - The event object.
+         */
         private beginPayment = (e: JQueryEventObject): void => {
 
             e.preventDefault();
 
             // Get the amount to request from the form and set up
             // the totals and line items for collection and delivery.
-            let subtotal = $("#amount").val();
-            let delivery = "0.01";
-            let deliveryTotal = (parseFloat(subtotal) + parseFloat(delivery)).toString(10);
-            let storeName = $("meta[name='apple-pay-store-name']").attr("content");
+            const subtotal = $("#amount").val();
+            const delivery = "0.01";
+            const deliveryTotal = (parseFloat(subtotal) + parseFloat(delivery)).toString(10);
 
-            let totalForCollection = {
-                label: storeName,
+            const totalForCollection = {
+                label: this.storeName,
                 amount: subtotal
             };
 
-            let lineItemsForCollection = [
+            const lineItemsForCollection = [
                 { label: "Subtotal", amount: subtotal, type: "final" }
             ];
 
-            let totalForDelivery = {
-                label: storeName,
+            const totalForDelivery = {
+                label: this.storeName,
                 amount: deliveryTotal
             };
 
-            let lineItemsForDelivery = [
+            const lineItemsForDelivery = [
                 { label: "Subtotal", amount: subtotal, type: "final" },
                 { label: "Delivery", amount: delivery, type: "final" }
             ];
 
             // Create the Apple Pay payment request as appropriate.
-            let paymentRequest = {
-                countryCode: "GB",
-                currencyCode: "GBP",
-                merchantCapabilities: ["supports3DS"],
-                supportedNetworks: ["amex", "discover", "jcb", "masterCard", "privateLabel", "visa"],
-                lineItems: lineItemsForDelivery,
-                total: totalForDelivery,
-                requiredBillingContactFields: ["email", "name", "phone", "postalAddress"],
-                requiredShippingContactFields: ["email", "name", "phone", "postalAddress"],
-                shippingType: "delivery",
-                shippingMethods: [
-                    { label: "Delivery", amount: delivery, identifier: "delivery", detail: "Delivery to you" },
-                    { label: "Collection", amount: "0.00", identifier: "collection", detail: "Collect from the store" }
-                ]
-            };
+            const paymentRequest = this.createPaymentRequest(delivery, lineItemsForDelivery, totalForDelivery);
 
             // Create the Apple Pay session.
-            let session = new ApplePaySession(this.applePayVersion, paymentRequest);
+            this.session = new ApplePaySession(this.applePayVersion, paymentRequest);
 
             // Setup handler for validation the merchant session.
-            session.onvalidatemerchant = function (event) {
-
-                // Create the payload.
-                let data = {
-                    validationUrl: event.validationURL
-                };
-
-                // Setup antiforgery HTTP header.
-                let antiforgeryHeader = $("meta[name='x-antiforgery-name']").attr("content");
-                let antiforgeryToken = $("meta[name='x-antiforgery-token']").attr("content");
-
-                let headers: any = {};
-                headers[antiforgeryHeader] = antiforgeryToken;
-
-                // Post the payload to the server to validate the
-                // merchant session using the merchant certificate.
-                $.ajax({
-                    url: "/home/validate",
-                    method: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(data),
-                    headers: headers
-                }).then((merchantSession) => {
-                    // Complete validation by passing the merchant session to the Apple Pay session.
-                    session.completeMerchantValidation(merchantSession);
-                });
-            };
+            this.session.onvalidatemerchant = this.onValidateMerchant;
 
             // Setup handler for shipping method selection.
-            session.onshippingmethodselected = (event) => {
+            this.session.onshippingmethodselected = (event) => {
 
                 let newTotal;
                 let newLineItems;
 
+                // Swap the total and line items based on the selected shipping method
                 if (event.shippingMethod.identifier === "collection") {
                     newTotal = totalForCollection;
                     newLineItems = lineItemsForCollection;
-                } else {
+                }
+                else {
                     newTotal = totalForDelivery;
                     newLineItems = lineItemsForDelivery;
                 }
 
-                session.completeShippingMethodSelection(ApplePaySession.STATUS_SUCCESS, newTotal, newLineItems);
+                this.session.completeShippingMethodSelection(ApplePaySession.STATUS_SUCCESS, newTotal, newLineItems);
             };
 
             // Setup handler to receive the token when payment is authorized.
-            session.onpaymentauthorized = (event) => {
+            this.session.onpaymentauthorized = this.onPaymentAuthorized;
 
-                // Get the contact details for use, for example to
-                // use to create an account for the user.
-                let billingContact = event.payment.billingContact;
-                let shippingContact = event.payment.shippingContact;
+            // Begin the session to display the Apple Pay sheet.
+            this.session.begin();
+        }
 
-                // Get the payment data for use to capture funds from
-                // the encrypted Apple Pay token in your server.
-                let token = event.payment.token.paymentData;
+        /**
+         * Captures funds from the specified payment token.
+         * @param token - The authorized Apple Pay payment token.
+         * @returns The status code to return to complete the payment.
+         */
+        private captureFunds(token: ApplePayJS.ApplePayPaymentToken): number {
 
-                // Apply the details from the Apple Pay sheet to the page.
-                let update = (panel: JQuery, contact: ApplePayJS.ApplePayPaymentContact) => {
-
-                    if (contact.emailAddress) {
-                        panel.find(".contact-email")
-                            .text(contact.emailAddress)
-                            .attr("href", "mailto:" + contact.emailAddress)
-                            .append("<br/>")
-                            .removeClass("hide");
-                    }
-
-                    if (contact.emailAddress) {
-                        panel.find(".contact-telephone")
-                            .text(contact.phoneNumber)
-                            .attr("href", "tel:" + contact.phoneNumber)
-                            .append("<br/>")
-                            .removeClass("hide");
-                    }
-
-                    if (contact.givenName) {
-                        panel.find(".contact-name")
-                            .text(contact.givenName + " " + contact.familyName)
-                            .append("<br/>")
-                            .removeClass("hide");
-                    }
-
-                    if (contact.addressLines) {
-                        panel.find(".contact-address-lines").text(contact.addressLines.join(", "));
-                        panel.find(".contact-locality").text(contact.locality);
-                        panel.find(".contact-administrative-area").text(contact.administrativeArea);
-                        panel.find(".contact-postal-code").text(contact.postalCode);
-                        panel.find(".contact-country").text(contact.country);
-                        panel.find(".contact-address").removeClass("hide");
-                    }
-                };
-
-                $(".card-name").text(event.payment.token.paymentMethod.displayName);
-                update($("#billing-contact"), billingContact);
-                update($("#shipping-contact"), shippingContact);
-
-                // Do something with the payment to capture funds and
-                // then dismiss the Apple Pay sheet for the session with
-                // the relevant status code for the payment's authorization.
-                session.completePayment(ApplePaySession.STATUS_SUCCESS);
-
-                this.showSuccess();
-            };
-
-            // Start the session to display the Apple Pay sheet.
-            session.begin();
+            // Do something with the payment to capture funds and
+            // then dismiss the Apple Pay sheet for the session with
+            // the relevant status code for the payment's authorization.
+            return ApplePaySession.STATUS_SUCCESS;
         }
 
         /**
@@ -231,6 +164,31 @@ namespace justEat {
         }
 
         /**
+         * Creates an Apple Pay payment request for the specified total and line items.
+         * @param deliveryAmount - The amount to charge for delivery.
+         * @param lineItems - The line items for the payment.
+         * @param total - The total for the payment.
+         * @returns The Apple Pay payment request that was created.
+         */
+        private createPaymentRequest = (deliveryAmount: string, lineItems: ApplePayJS.ApplePayLineItem[], total: ApplePayJS.ApplePayLineItem): ApplePayJS.ApplePayPaymentRequest => {
+            return {
+                countryCode: this.countryCode,
+                currencyCode: this.currencyCode,
+                merchantCapabilities: ["supports3DS", "supportsCredit", "supportsDebit"],
+                supportedNetworks: ["amex", "discover", "jcb", "masterCard", "privateLabel", "visa"],
+                lineItems: lineItems,
+                total: total,
+                requiredBillingContactFields: ["email", "name", "phone", "postalAddress"],
+                requiredShippingContactFields: ["email", "name", "phone", "postalAddress"],
+                shippingType: "delivery",
+                shippingMethods: [
+                    { label: "Delivery", amount: deliveryAmount, identifier: "delivery", detail: "Delivery to you" },
+                    { label: "Collection", amount: "0.00", identifier: "collection", detail: "Collect from the store" }
+                ]
+            };
+        }
+
+        /**
          * Gets the current page's language.
          * @returns The current page language.
          */
@@ -242,37 +200,134 @@ namespace justEat {
          * Hides the setup button.
          */
         private hideSetupButton(): void {
-            let button = $("#set-up-apple-pay-button");
+            const button = $("#set-up-apple-pay-button");
             button.addClass("hide");
             button.off("click");
         }
 
+        /**
+         * Handles the Apple Pay payment being authorized by the user.
+         * @param event - The event object.
+         */
+        private onPaymentAuthorized = (event: ApplePayJS.ApplePayPaymentAuthorizedEvent): void => {
+
+            // Get the payment data for use to capture funds from
+            // the encrypted Apple Pay token in your server.
+            const token = event.payment.token;
+
+            // Process the payment
+            const paymentStatus = this.captureFunds(token);
+
+            if (paymentStatus === ApplePaySession.STATUS_SUCCESS) {
+
+                // Get the contact details for use, for example to
+                // use to create an account for the user.
+                const billingContact = event.payment.billingContact;
+                const shippingContact = event.payment.shippingContact;
+
+                // Apply the details captured from the Apple Pay sheet to the page.
+                $(".card-name").text(event.payment.token.paymentMethod.displayName);
+                this.updatePanel($("#billing-contact"), billingContact);
+                this.updatePanel($("#shipping-contact"), shippingContact);
+
+                this.session.completePayment(paymentStatus);
+                this.showSuccess();
+            }
+            else {
+                this.showError(`Your payment could not be processed. Error code: ${paymentStatus}.`);
+            }
+        }
+
+        /**
+         * Handles merchant validation for the Apple Pay session.
+         * @param event - The event object.
+         */
+        private onValidateMerchant = (event: ApplePayJS.ApplePayValidateMerchantEvent): void => {
+
+            // Create the payload.
+            const data = {
+                validationUrl: event.validationURL
+            };
+
+            const headers = this.createValidationHeaders();
+            const request = this.createValidationRequest(data, headers);
+
+            // Post the payload to the server to validate the
+            // merchant session using the merchant certificate.
+            $.ajax(request).then((merchantSession) => {
+                // Complete validation by passing the merchant session to the Apple Pay session.
+                this.session.completeMerchantValidation(merchantSession);
+            });
+        }
+
+        /**
+         * Creates the HTTP headers to use for the validation request.
+         * @returns An object representing the HTTP headers for the request.
+         */
+        private createValidationHeaders(): any {
+
+            // Set any custom HTTP request headers here.
+            let headers: any = {
+            };
+
+            // Setup antiforgery HTTP header.
+            const antiforgeryHeader = $("meta[name='x-antiforgery-name']").attr("content");
+            const antiforgeryToken = $("meta[name='x-antiforgery-token']").attr("content");
+
+            headers[antiforgeryHeader] = antiforgeryToken;
+
+            return headers;
+        }
+
+        /**
+         * Creates the validation request to use for the HTTP POST to the server.
+         * @param data - The request data.
+         * @param headers - The request headers.
+         */
+        private createValidationRequest(data: any, headers: any): JQueryAjaxSettings {
+            return {
+                url: "/home/validate",
+                method: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                headers: headers
+            };
+        };
+
+        /**
+         * Event handler for setting up Apple Pay.
+         */
         private setupApplePay = (): Promise<boolean> => {
             return ApplePaySession.openPaymentSetup(this.merchantIdentifier)
                 .then((success) => {
                     if (success) {
                         this.hideSetupButton();
                         this.showButton();
-                    } else {
+                    }
+                    else {
                         this.showError("Failed to set up Apple Pay.");
                     }
                     return success;
-                }).catch((e: any) => {
-                    this.showError("Failed to set up Apple Pay. " + e);
+                }).catch((err: any) => {
+                    this.showError(`Failed to set up Apple Pay. ${JSON.stringify(err)}`);
                     return false;
                 });
         }
 
+        /**
+         * Shows the Apple Pay button.
+         */
         private showButton = (): void => {
 
-            let button = $("#apple-pay-button");
+            const button = $("#apple-pay-button");
             button.attr("lang", this.getPageLanguage());
             button.on("click", this.beginPayment);
 
             if (this.supportsSetup()) {
                 button.addClass("apple-pay-button-with-text");
                 button.addClass("apple-pay-button-black-with-text");
-            } else {
+            }
+            else {
                 button.addClass("apple-pay-button");
                 button.addClass("apple-pay-button-black");
             }
@@ -285,13 +340,16 @@ namespace justEat {
          * @param text - The text to show in the banner.
          */
         private showError(text: string): void {
-            let error = $(".apple-pay-error");
+            const error = $(".apple-pay-error");
             error.text(text);
             error.removeClass("hide");
         }
 
+        /**
+         * Shows the button to set up Apple Pay.
+         */
         private showSetupButton = (): void => {
-            let button = $("#set-up-apple-pay-button");
+            const button = $("#set-up-apple-pay-button");
             button.attr("lang", this.getPageLanguage());
             button.on("click", this.setupApplePay);
             button.removeClass("hide");
@@ -302,7 +360,7 @@ namespace justEat {
          */
         private showSuccess() {
             $(".apple-pay-intro").hide();
-            let success = $(".apple-pay-success");
+            const success = $(".apple-pay-success");
             success.removeClass("hide");
         }
 
@@ -320,6 +378,46 @@ namespace justEat {
          */
         private supportsSetup(): boolean {
             return "openPaymentSetup" in ApplePaySession;
+        }
+
+        /**
+         * Updates the specified panel with the specified Apple Pay contact.
+         * @param panel - The panel to update.
+         * @param contact - The contact to update the panel with the details for.
+         */
+        private updatePanel = (panel: JQuery, contact: ApplePayJS.ApplePayPaymentContact) => {
+
+            if (contact.emailAddress) {
+                panel.find(".contact-email")
+                    .text(contact.emailAddress)
+                    .attr("href", "mailto:" + contact.emailAddress)
+                    .append("<br/>")
+                    .removeClass("hide");
+            }
+
+            if (contact.emailAddress) {
+                panel.find(".contact-telephone")
+                    .text(contact.phoneNumber)
+                    .attr("href", "tel:" + contact.phoneNumber)
+                    .append("<br/>")
+                    .removeClass("hide");
+            }
+
+            if (contact.givenName) {
+                panel.find(".contact-name")
+                    .text(contact.givenName + " " + contact.familyName)
+                    .append("<br/>")
+                    .removeClass("hide");
+            }
+
+            if (contact.addressLines) {
+                panel.find(".contact-address-lines").text(contact.addressLines.join(", "));
+                panel.find(".contact-locality").text(contact.locality);
+                panel.find(".contact-administrative-area").text(contact.administrativeArea);
+                panel.find(".contact-postal-code").text(contact.postalCode);
+                panel.find(".contact-country").text(contact.country);
+                panel.find(".contact-address").removeClass("hide");
+            }
         }
     }
 }
