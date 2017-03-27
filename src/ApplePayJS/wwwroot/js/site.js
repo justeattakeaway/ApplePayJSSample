@@ -13,6 +13,9 @@ justEat = {
             var subtotal = $("#amount").val();
             var delivery = "0.01";
             var deliveryTotal = (Number(subtotal) + Number(delivery)).toString();
+
+            var countryCode = $("meta[name='payment-country-code']").attr("content") || "GB";
+            var currencyCode = $("meta[name='payment-currency-code']").attr("content") || "GBP";
             var storeName = $("meta[name='apple-pay-store-name']").attr("content");
 
             var totalForCollection = {
@@ -36,8 +39,8 @@ justEat = {
 
             // Create the Apple Pay payment request as appropriate.
             var paymentRequest = {
-                countryCode: "GB",
-                currencyCode: "GBP",
+                countryCode: countryCode,
+                currencyCode: currencyCode,
                 merchantCapabilities: [ "supports3DS" ],
                 supportedNetworks: [ "amex", "masterCard", "visa" ],
                 lineItems: lineItemsForDelivery,

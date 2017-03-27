@@ -10,7 +10,8 @@
     ViewData["Title"] = "Sample integration";
     var token = Antiforgery.GetAndStoreTokens(Context);
 
-    var region = new System.Globalization.RegionInfo("en-GB");
+    var language = Context.Request.Query["lang"].FirstOrDefault() ?? "en-GB";
+    var region = new System.Globalization.RegionInfo(language);
 
     var countryCode = region.TwoLetterISORegionName;
     var currencyCode = region.ISOCurrencySymbol;
