@@ -2,5 +2,6 @@
   "name": "justeatapplepayjs",
   "private": true,
   "dependencies": {
+    "applepayjs-polyfill": "2.0.0"
   }
 }

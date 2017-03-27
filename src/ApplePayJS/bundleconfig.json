@@ -14,6 +14,17 @@
       "enabled": true,
       "renameLocals": true
     },
+    "sourceMap": true
+  },
+  {
+    "outputFileName": "wwwroot/ts/site.min.js",
+    "inputFiles": [
+      "wwwroot/ts/site.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
     "sourceMap": false
   }
 ]

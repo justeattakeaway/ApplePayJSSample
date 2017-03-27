@@ -154,3 +154,21 @@ div.apple-pay {
 .apple-pay-setup-button-white-with-line {
     -apple-pay-button-style: white-outline;
 }
+
+.apple-pay-donate-button {
+    display: inline-block;
+    -webkit-appearance: -apple-pay-button;
+    -apple-pay-button-type: donate;
+}
+
+.apple-pay-donate-button-black {
+    -apple-pay-button-style: black;
+}
+
+.apple-pay-donate-button-white {
+    -apple-pay-button-style: white;
+}
+
+.apple-pay-donate-button-white-with-line {
+    -apple-pay-button-style: white-outline;
+}

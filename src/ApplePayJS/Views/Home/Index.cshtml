@@ -4,35 +4,47 @@
 *@
 
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@inject Microsoft.Extensions.Configuration.IConfiguration Config
 
 @{
     ViewData["Title"] = "Sample integration";
     var token = Antiforgery.GetAndStoreTokens(Context);
 
-    var region = new System.Globalization.RegionInfo("en-GB");
+    var language = Context.Request.Query["lang"].FirstOrDefault() ?? "en-GB";
+    var region = new System.Globalization.RegionInfo(language);
 
     var countryCode = region.TwoLetterISORegionName;
     var currencyCode = region.ISOCurrencySymbol;
     var currencySymbol = region.CurrencySymbol;
+    var merchantId = @ViewData["MerchantId"];
 }
 
 @section meta {
+
     @*
         Setup antiforgery tokens for the JavaScript.
     *@
     <meta name="x-antiforgery-name" content="@token.HeaderName" />
     <meta name="x-antiforgery-token" content="@token.RequestToken" />
+
     @*
         Add meta tags for Apple Pay discoverability by web crawlers.
     *@
     <meta property="product:payment_method" content="ApplePay" />
     <meta name="payment-country-code" content="@countryCode" />
     <meta name="payment-currency-code" content="@currencyCode" />
+
     @*
         Add meta tags for use by the JavaScript to access the merchant identifier and store name.
     *@
-    <meta name="apple-pay-merchant-id" content="@ViewData["MerchantId"]" />
+    <meta name="apple-pay-merchant-id" content="@merchantId" />
     <meta name="apple-pay-store-name" content="@ViewData["StoreName"]" />
+
+    @*
+        Add link for use by the JavaScript to get the URL to POST to for merchant validation.
+    *@
+    <link rel="merchant-validation" href="@Url.RouteUrl("MerchantValidation")" />
+
     @*
         Add link tags for the icon to display on a paired
         device when a payment is started from Safari on macOS.
@@ -152,3 +164,27 @@
         </form>
     </div>
 </div>
+@section scripts {
+    @if (string.Equals(Config["ApplePay:UsePolyfill"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
+    {
+        @await Html.PartialAsync("_Polyfill", merchantId)
+    }
+    @if (string.Equals(Config["ApplePay:UseTypeScript"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
+    {
+        <environment names="Development">
+            <script src="~/ts/site.js" asp-append-version="true"></script>
+        </environment>
+        <environment names="Staging,Production">
+            <script src="~/ts/site.min.js" asp-append-version="true"></script>
+        </environment>
+    }
+    else
+    {
+        <environment names="Development">
+            <script src="~/js/site.js" asp-append-version="true"></script>
+        </environment>
+        <environment names="Staging,Production">
+            <script src="~/js/site.min.js" asp-append-version="true"></script>
+        </environment>
+    }
+}
