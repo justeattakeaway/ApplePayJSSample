@@ -15,6 +15,7 @@
     var countryCode = region.TwoLetterISORegionName;
     var currencyCode = region.ISOCurrencySymbol;
     var currencySymbol = region.CurrencySymbol;
+    var merchantId = @ViewData["MerchantId"];
 }
 
 @section meta {
@@ -35,7 +36,7 @@
     @*
         Add meta tags for use by the JavaScript to access the merchant identifier and store name.
     *@
-    <meta name="apple-pay-merchant-id" content="@ViewData["MerchantId"]" />
+    <meta name="apple-pay-merchant-id" content="@merchantId" />
     <meta name="apple-pay-store-name" content="@ViewData["StoreName"]" />
 
     @*
@@ -163,6 +164,10 @@
     </div>
 </div>
 @section scripts {
+    @if (string.Equals(Config["ApplePay:UsePolyfill"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
+    {
+        @await Html.PartialAsync("_Polyfill", merchantId)
+    }
     @if (string.Equals(Config["ApplePay:UseTypeScript"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
     {
         <environment names="Development">

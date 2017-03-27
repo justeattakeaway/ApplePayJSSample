@@ -1,0 +1,49 @@
+﻿@model string
+@*
+    Use this polyfill during development to test your Apple Pay JS implementation
+    on devices and browsers that do not natively support Apple Pay.
+*@
+<environment names="Development">
+    <script src="~/lib/applepayjs-polyfill/ApplePaySession.js"></script>
+    <script>
+
+        @* Set the merchant identifier to use *@
+        ApplePaySessionPolyfill.setMerchantIdentifier("@Model");
+
+        @* Create a dummy billing and shipping contact *@
+        var createContact = function () {
+            return {
+                emailAddress: "user@domain.com",
+                familyName: "Smith",
+                givenName: "John",
+                phoneNumber: "07777777777",
+                addressLines: ["Just Eat", "Fleet Place House", "2 Fleet Place"],
+                locality: "London",
+                administrativeArea: "",
+                postalCode: "EC4M 7RF",
+                country: "United Kingdom",
+                countryCode: "GB"
+            };
+        };
+
+        ApplePaySessionPolyfill.createBillingContact = createContact;
+        ApplePaySessionPolyfill.createShippingContact = createContact;
+
+        @*
+            Create a dummy payment token, or use one generated from a test
+            device or a test token made available by your payment provider.
+        *@
+        ApplePaySessionPolyfill.createPaymentToken = function (session) {
+            return {
+                paymentData: "SomeEncryptedPaymentData",
+                paymentMethod: {
+                    displayName: "American Express",
+                    network: "amex",
+                    type: "credit",
+                    paymentPass: null
+                },
+                transactionIdentifier: "@Guid.NewGuid().ToString()"
+            };
+        };
+    </script>
+</environment>
