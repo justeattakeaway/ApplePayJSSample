@@ -163,7 +163,7 @@
     </div>
 </div>
 @section scripts {
-    @if (string.Equals(Config["UseTypeScript"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
+    @if (string.Equals(Config["ApplePay:UseTypeScript"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
     {
         <environment names="Development">
             <script src="~/ts/site.js" asp-append-version="true"></script>
