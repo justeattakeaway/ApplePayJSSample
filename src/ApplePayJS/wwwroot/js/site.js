@@ -163,7 +163,8 @@ justEat = {
             // Start the session to display the Apple Pay sheet.
             session.begin();
         },
-        setupApplePay: function (merchantIdentifier) {
+        setupApplePay: function () {
+            var merchantIdentifier = justEat.applePay.getMerchantIdentifier();
             ApplePaySession.openPaymentSetup(merchantIdentifier)
                 .then(function (success) {
                     if (success) {
@@ -194,7 +195,7 @@ justEat = {
         showSetupButton: function () {
             var button = $("#set-up-apple-pay-button");
             button.attr("lang", justEat.applePay.getPageLanguage());
-            button.on("click", justEat.applePay.setupApplePay);
+            button.on("click", $.proxy(justEat.applePay, "setupApplePay"));
             button.removeClass("hide");
         },
         hideSetupButton: function () {
@@ -220,6 +221,9 @@ justEat = {
         },
         getPageLanguage: function () {
             return $("html").attr("lang") || "en";
+        },
+        getMerchantIdentifier: function () {
+            return $("meta[name='apple-pay-merchant-id']").attr("content");
         }
     }
 };
@@ -230,7 +234,7 @@ justEat = {
     if (justEat.applePay.supportedByDevice()) {
 
         // Get the merchant identifier from the page meta tags.
-        var merchantIdentifier = $("meta[name='apple-pay-merchant-id']").attr("content");
+        var merchantIdentifier = justEat.applePay.getMerchantIdentifier();
 
         // Determine whether to display the Apple Pay button. See this link for details
         // on the two different approaches: https://developer.apple.com/reference/applepayjs/applepaysession#2168855
