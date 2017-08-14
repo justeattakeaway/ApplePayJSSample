@@ -1,10 +1,11 @@
-﻿// Copyright (c) Just Eat, 2016. All rights reserved.
+// Copyright (c) Just Eat, 2016. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 namespace JustEat.ApplePayJS
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -41,9 +42,9 @@ namespace JustEat.ApplePayJS
 
             services.AddAntiforgery(options =>
             {
-                options.CookieName = "antiforgerytoken";
+                options.Cookie.Name = "antiforgerytoken";
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 options.HeaderName = "x-antiforgery-token";
-                options.RequireSsl = Environment.IsProduction();
             });
 
             services.AddMvc(options =>
