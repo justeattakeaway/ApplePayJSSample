@@ -1,4 +1,4 @@
-﻿// Copyright (c) Just Eat, 2016. All rights reserved.
+// Copyright (c) Just Eat, 2016. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 justEat = {
@@ -233,11 +233,14 @@ justEat = {
 
 (function () {
 
-    // Is ApplePaySession available in the browser?
-    if (justEat.applePay.supportedByDevice()) {
+    // Get the merchant identifier from the page meta tags.
+    var merchantIdentifier = justEat.applePay.getMerchantIdentifier();
 
-        // Get the merchant identifier from the page meta tags.
-        var merchantIdentifier = justEat.applePay.getMerchantIdentifier();
+    if (!merchantIdentifier) {
+        justEat.applePay.showError("No Apple Pay merchant certificate is configured.");
+    }
+    // Is ApplePaySession available in the browser?
+    else if (justEat.applePay.supportedByDevice()) {
 
         // Determine whether to display the Apple Pay button. See this link for details
         // on the two different approaches: https://developer.apple.com/reference/applepayjs/applepaysession#2168855
