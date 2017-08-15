@@ -1,7 +1,7 @@
 {
   "name": "justeatapplepayjs",
   "private": true,
-  "version": "1.0.1",
+  "version": "2.0.0",
   "devDependencies": {
     "@types/applepayjs": "1.0.0",
     "@types/jquery": "2.0.41",

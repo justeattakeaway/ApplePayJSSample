@@ -19,7 +19,7 @@ The key components to look at for the implementation are:
 
 To setup the repository to run the sample, perform the steps below:
 
-  1. Install the [.NET Core 1.0.1 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2017 or Visual Studio Code.
+  1. Install the [.NET Core 2.0.0 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2017 or Visual Studio Code.
   1. Fork this repository.
   1. Clone the repository from your fork to your local machine: ```git clone https://github.com/{username}/ApplePayJSSample.git```
   1. Restore the Bower, npm and NuGet packages.
@@ -41,7 +41,7 @@ You should now be able to perform Apple Pay JS transactions on the deployed appl
 
 ## Local Debugging
 
-You should be able to debug the application in [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio 2017 RC](https://www.visualstudio.com/downloads/).
+You should be able to debug the application in [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio 2017 (15.3 or later)](https://www.visualstudio.com/downloads/).
 
 ## Azure App Service Deployment
 
