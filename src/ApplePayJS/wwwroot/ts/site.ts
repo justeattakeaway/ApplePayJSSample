@@ -1,4 +1,4 @@
-﻿// Copyright (c) Just Eat, 2016. All rights reserved.
+// Copyright (c) Just Eat, 2016. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
 namespace justEat {
@@ -42,8 +42,11 @@ namespace justEat {
          */
         public initialize(): void {
 
+            if (!this.merchantIdentifier) {
+                this.showError("No Apple Pay merchant certificate is configured.");
+            }
             // Is ApplePaySession available in the browser?
-            if (this.supportedByDevice() === true) {
+            else if (this.supportedByDevice() === true) {
 
                 // Determine whether to display the Apple Pay button. See this link for details
                 // on the two different approaches: https://developer.apple.com/reference/applepayjs/applepaysession#2168855
