@@ -20,6 +20,7 @@ addons:
     - libunwind8
 
 install:
+  - npm install -g bower
   - npm install -g npm
 
 script:

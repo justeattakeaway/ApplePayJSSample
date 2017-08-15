@@ -10,6 +10,7 @@ branches:
     - master
 
 install:
+  - ps: npm install -g bower
   - ps: npm install -g npm
 
 build_script:
