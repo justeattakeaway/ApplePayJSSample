@@ -1,5 +1,10 @@
 # Apple Pay JS Example Integration
 
+
+| | Linux | Windows |
+|:-:|:-:|:-:|
+| **Build Status** | [![Build status](https://img.shields.io/travis/justeat/ApplePayJSSample/master.svg)](https://travis-ci.org/justeat/ApplePayJSSample) | [![Build status](https://img.shields.io/appveyor/ci/justeattech/applepayjssample/master.svg)](https://ci.appveyor.com/project/justeattech/applepayjssample) |
+
 This repository contains a sample implementation of [Apple Pay JS](https://developer.apple.com/reference/applepayjs/) using ASP.NET Core written in C# and JavaScript.
 
 ## Overview
