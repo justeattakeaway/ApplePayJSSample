@@ -1,0 +1,26 @@
+sudo: required
+dist: trusty
+
+env:
+  global:
+    - DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
+    - NUGET_XMLDOC_MODE=skip
+
+branches:
+  only:
+    - master
+
+addons:
+  apt:
+    packages:
+    - gettext
+    - libcurl4-openssl-dev
+    - libicu-dev
+    - libssl-dev
+    - libunwind8
+
+install:
+  - npm install -g npm
+
+script:
+  - ./build.sh --restore-packages
