@@ -75,7 +75,11 @@ namespace JustEat.ApplePayJS
                    .UseStatusCodePages();
             }
 
-            app.UseStaticFiles();
+            app.UseStaticFiles(
+                new StaticFileOptions()
+                {
+                    ServeUnknownFileTypes = true, // Required to serve the files in the .well-known folder
+                });
 
             app.UseMvc(routes =>
             {
