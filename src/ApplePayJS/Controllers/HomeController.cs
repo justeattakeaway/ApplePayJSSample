@@ -5,6 +5,7 @@ namespace JustEat.ApplePayJS.Controllers
 {
     using System;
     using System.Net.Http;
+    using System.Security.Authentication;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Threading.Tasks;
@@ -94,6 +95,10 @@ namespace JustEat.ApplePayJS.Controllers
         {
             var handler = new HttpClientHandler();
             handler.ClientCertificates.Add(certificate);
+
+            // Apple Pay JS requires the use of TLS 1.2 to generate a merchange session:
+            // https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
+            handler.SslProtocols = SslProtocols.Tls12;
 
             return new HttpClient(handler, disposeHandler: true);
         }
