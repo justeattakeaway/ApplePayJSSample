@@ -24,7 +24,7 @@ The key components to look at for the implementation are:
 
 To setup the repository to run the sample, perform the steps below:
 
-  1. Install the [.NET Core 2.0.0 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2017 or Visual Studio Code.
+  1. Install the [.NET Core 2.0.3 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2017 or Visual Studio Code.
   1. Fork this repository.
   1. Clone the repository from your fork to your local machine: ```git clone https://github.com/{username}/ApplePayJSSample.git```
   1. Restore the Bower, npm and NuGet packages.
