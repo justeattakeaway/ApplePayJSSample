@@ -39,6 +39,9 @@ namespace JustEat.ApplePayJS.Controllers
         [Route("applepay/validate", Name = "MerchantValidation")]
         public async Task<IActionResult> Validate([FromBody] ValidateMerchantSessionModel model)
         {
+            // You may wish to additionally validate that the URI specified for merchant validation in the
+            // request body is a documented Apple Pay JS hostname. The IP addresses and DNS hostnames of
+            // these servers are available here: https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
             if (!ModelState.IsValid ||
                 string.IsNullOrWhiteSpace(model?.ValidationUrl) ||
                 !Uri.TryCreate(model.ValidationUrl, UriKind.Absolute, out Uri requestUri))
