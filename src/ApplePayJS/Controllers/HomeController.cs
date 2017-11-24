@@ -5,6 +5,7 @@ namespace JustEat.ApplePayJS.Controllers
 {
     using System;
     using System.Net.Http;
+    using System.Security.Authentication;
     using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Threading.Tasks;
@@ -38,6 +39,9 @@ namespace JustEat.ApplePayJS.Controllers
         [Route("applepay/validate", Name = "MerchantValidation")]
         public async Task<IActionResult> Validate([FromBody] ValidateMerchantSessionModel model)
         {
+            // You may wish to additionally validate that the URI specified for merchant validation in the
+            // request body is a documented Apple Pay JS hostname. The IP addresses and DNS hostnames of
+            // these servers are available here: https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
             if (!ModelState.IsValid ||
                 string.IsNullOrWhiteSpace(model?.ValidationUrl) ||
                 !Uri.TryCreate(model.ValidationUrl, UriKind.Absolute, out Uri requestUri))
@@ -94,6 +98,10 @@ namespace JustEat.ApplePayJS.Controllers
         {
             var handler = new HttpClientHandler();
             handler.ClientCertificates.Add(certificate);
+
+            // Apple Pay JS requires the use of TLS 1.2 to generate a merchange session:
+            // https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
+            handler.SslProtocols = SslProtocols.Tls12;
 
             return new HttpClient(handler, disposeHandler: true);
         }
