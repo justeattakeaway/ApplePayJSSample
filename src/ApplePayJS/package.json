@@ -6,7 +6,7 @@
     "@types/applepayjs": "1.0.0",
     "@types/jquery": "2.0.41",
     "tslint": "4.5.1",
-    "typescript": "2.2.1"
+    "typescript": "2.6.1"
   },
   "scripts": {
     "build": "tsc",
