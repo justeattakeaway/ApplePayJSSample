@@ -51,11 +51,23 @@ justEat = {
                 shippingMethods: [
                     { label: "Delivery", amount: delivery, identifier: "delivery", detail: "Delivery to you" },
                     { label: "Collection", amount: "0.00", identifier: "collection", detail: "Collect from the store" }
-                ]
+                ],
+                supportedCountries: [countryCode]
             };
 
+            // You can optionally pre-populate the billing and shipping contact
+            // with information about the current user, if available to you.
+            // paymentRequest.billingContact = {
+            //     givenName: "",
+            //     familyName: ""
+            // };
+            // paymentRequest.shippingContact = {
+            //     givenName: "",
+            //     familyName: ""
+            // };
+
             // Create the Apple Pay session.
-            var session = new ApplePaySession(1, paymentRequest);
+            var session = new ApplePaySession(3, paymentRequest);
 
             // Setup handler for validation the merchant session.
             session.onvalidatemerchant = function (event) {
@@ -100,7 +112,12 @@ justEat = {
                     newLineItems = lineItemsForDelivery;
                 }
 
-                session.completeShippingMethodSelection(ApplePaySession.STATUS_SUCCESS, newTotal, newLineItems);
+                var update = {
+                    newTotal: newTotal,
+                    newLineItems: newLineItems
+                };
+
+                session.completeShippingMethodSelection(update);
             };
 
             // Setup handler to receive the token when payment is authorized.
@@ -126,7 +143,7 @@ justEat = {
                              .removeClass("hide");
                     }
 
-                    if (contact.emailAddress) {
+                    if (contact.phoneNumber) {
                         panel.find(".contact-telephone")
                              .text(contact.phoneNumber)
                              .attr("href", "tel:" + contact.phoneNumber)
@@ -143,7 +160,9 @@ justEat = {
 
                     if (contact.addressLines) {
                         panel.find(".contact-address-lines").text(contact.addressLines.join(", "));
+                        panel.find(".contact-sub-locality").text(contact.subLocality);
                         panel.find(".contact-locality").text(contact.locality);
+                        panel.find(".contact-sub-administrative-area").text(contact.subAdministrativeArea);
                         panel.find(".contact-administrative-area").text(contact.administrativeArea);
                         panel.find(".contact-postal-code").text(contact.postalCode);
                         panel.find(".contact-country").text(contact.country);
@@ -155,10 +174,15 @@ justEat = {
                 update($("#billing-contact"), billingContact);
                 update($("#shipping-contact"), shippingContact);
 
+                var authorizationResult = {
+                    status: ApplePaySession.STATUS_SUCCESS,
+                    errors: []
+                };
+
                 // Do something with the payment to capture funds and
                 // then dismiss the Apple Pay sheet for the session with
                 // the relevant status code for the payment's authorization.
-                session.completePayment(ApplePaySession.STATUS_SUCCESS);
+                session.completePayment(authorizationResult);
 
                 justEat.applePay.showSuccess();
             };
@@ -243,7 +267,7 @@ justEat = {
     else if (justEat.applePay.supportedByDevice()) {
 
         // Determine whether to display the Apple Pay button. See this link for details
-        // on the two different approaches: https://developer.apple.com/reference/applepayjs/applepaysession#2168855
+        // on the two different approaches: https://developer.apple.com/documentation/applepayjs/checking_if_apple_pay_is_available
         if (ApplePaySession.canMakePayments() === true) {
             justEat.applePay.showButton();
         } else {
@@ -254,7 +278,7 @@ justEat = {
                     if (justEat.applePay.supportsSetup()) {
                         justEat.applePay.showSetupButton(merchantIdentifier);
                     } else {
-                        justEat.applePay.showError("Apple Pay cannot be used at this time. If using macOS Sierra you need to be paired with a device that supports TouchID.");
+                        justEat.applePay.showError("Apple Pay cannot be used at this time. If using macOS you need to be paired with a device that supports at least TouchID.");
                     }
                 }
             });

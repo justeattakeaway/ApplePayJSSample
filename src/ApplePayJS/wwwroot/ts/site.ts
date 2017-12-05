@@ -30,7 +30,7 @@ namespace justEat {
             this.validationResource = $("link[rel='merchant-validation']").attr("href");
 
             // Set the Apple Pay JS version to use
-            this.applePayVersion = 2;
+            this.applePayVersion = 3;
 
             // Set the appropriate ISO country and currency codes
             this.countryCode = $("meta[name='payment-country-code']").attr("content") || "GB";
@@ -49,7 +49,7 @@ namespace justEat {
             else if (this.supportedByDevice() === true) {
 
                 // Determine whether to display the Apple Pay button. See this link for details
-                // on the two different approaches: https://developer.apple.com/reference/applepayjs/applepaysession#2168855
+                // on the two different approaches: https://developer.apple.com/documentation/applepayjs/checking_if_apple_pay_is_available
                 if (this.canMakePayments() === true) {
                     this.showButton();
                 }
@@ -62,7 +62,7 @@ namespace justEat {
                             if (this.supportsSetup()) {
                                 this.showSetupButton();
                             } else {
-                                this.showError("Apple Pay cannot be used at this time. If using macOS Sierra you need to be paired with a device that supports TouchID.");
+                                this.showError("Apple Pay cannot be used at this time. If using macOS you need to be paired with a device that supports at least TouchID.");
                             }
                         }
                     });
@@ -92,7 +92,7 @@ namespace justEat {
                 amount: subtotal
             };
 
-            const lineItemsForCollection = [
+            const lineItemsForCollection: ApplePayJS.ApplePayLineItem[] = [
                 { label: "Subtotal", amount: subtotal, type: "final" }
             ];
 
@@ -101,7 +101,7 @@ namespace justEat {
                 amount: deliveryTotal
             };
 
-            const lineItemsForDelivery = [
+            const lineItemsForDelivery: ApplePayJS.ApplePayLineItem[] = [
                 { label: "Subtotal", amount: subtotal, type: "final" },
                 { label: "Delivery", amount: delivery, type: "final" }
             ];
@@ -131,7 +131,12 @@ namespace justEat {
                     newLineItems = lineItemsForDelivery;
                 }
 
-                this.session.completeShippingMethodSelection(ApplePaySession.STATUS_SUCCESS, newTotal, newLineItems);
+                const update = {
+                    newTotal: newTotal,
+                    newLineItems: newLineItems
+                };
+
+                this.session.completeShippingMethodSelection(update);
             };
 
             // Setup handler to receive the token when payment is authorized.
@@ -144,14 +149,18 @@ namespace justEat {
         /**
          * Captures funds from the specified payment token.
          * @param token - The authorized Apple Pay payment token.
-         * @returns The status code to return to complete the payment.
+         * @returns The authorization result to return to complete the payment.
          */
-        private captureFunds(token: ApplePayJS.ApplePayPaymentToken): number {
+        private captureFunds(token: ApplePayJS.ApplePayPaymentToken): ApplePayJS.ApplePayPaymentAuthorizationResult {
 
             // Do something with the payment to capture funds and
             // then dismiss the Apple Pay sheet for the session with
             // the relevant status code for the payment's authorization.
-            return ApplePaySession.STATUS_SUCCESS;
+            // If any errors occurred, add them to the errors array for display.
+            return {
+                status: ApplePaySession.STATUS_SUCCESS,
+                errors: []
+            };
         }
 
         /**
@@ -178,7 +187,7 @@ namespace justEat {
          * @returns The Apple Pay payment request that was created.
          */
         private createPaymentRequest = (deliveryAmount: string, lineItems: ApplePayJS.ApplePayLineItem[], total: ApplePayJS.ApplePayLineItem): ApplePayJS.ApplePayPaymentRequest => {
-            return {
+            let paymentRequest: ApplePayJS.ApplePayPaymentRequest = {
                 countryCode: this.countryCode,
                 currencyCode: this.currencyCode,
                 merchantCapabilities: ["supports3DS", "supportsCredit", "supportsDebit"],
@@ -191,8 +200,22 @@ namespace justEat {
                 shippingMethods: [
                     { label: "Delivery", amount: deliveryAmount, identifier: "delivery", detail: "Delivery to you" },
                     { label: "Collection", amount: "0.00", identifier: "collection", detail: "Collect from the store" }
-                ]
+                ],
+                supportedCountries: [this.countryCode]
             };
+
+            // You can optionally pre-populate the billing and shipping contact
+            // with information about the current user, if available to you.
+            // paymentRequest.billingContact = {
+            //     givenName: "",
+            //     familyName: ""
+            // };
+            // paymentRequest.shippingContact = {
+            //     givenName: "",
+            //     familyName: ""
+            // };
+
+            return paymentRequest;
         }
 
         /**
@@ -223,9 +246,9 @@ namespace justEat {
             const token = event.payment.token;
 
             // Process the payment
-            const paymentStatus = this.captureFunds(token);
+            const authorizationResult = this.captureFunds(token);
 
-            if (paymentStatus === ApplePaySession.STATUS_SUCCESS) {
+            if (authorizationResult.status === ApplePaySession.STATUS_SUCCESS) {
 
                 // Get the contact details for use, for example to
                 // use to create an account for the user.
@@ -236,13 +259,19 @@ namespace justEat {
                 $(".card-name").text(event.payment.token.paymentMethod.displayName);
                 this.updatePanel($("#billing-contact"), billingContact);
                 this.updatePanel($("#shipping-contact"), shippingContact);
-
-                this.session.completePayment(paymentStatus);
                 this.showSuccess();
             }
             else {
-                this.showError(`Your payment could not be processed. Error code: ${paymentStatus}.`);
+                const errors = authorizationResult.errors.map((error) => {
+                    return error.message;
+                });
+                this.showError(`Your payment could not be processed. ${errors.join(" ")}`);
+                authorizationResult.errors.forEach((error) => {
+                    console.error(`${error.message} (${error.contactField}: ${error.code}).`);
+                });
             }
+
+            this.session.completePayment(authorizationResult);
         }
 
         /**
@@ -402,7 +431,7 @@ namespace justEat {
                     .removeClass("hide");
             }
 
-            if (contact.emailAddress) {
+            if (contact.phoneNumber) {
                 panel.find(".contact-telephone")
                     .text(contact.phoneNumber)
                     .attr("href", "tel:" + contact.phoneNumber)
@@ -419,7 +448,9 @@ namespace justEat {
 
             if (contact.addressLines) {
                 panel.find(".contact-address-lines").text(contact.addressLines.join(", "));
+                panel.find(".contact-sub-locality").text(contact.subLocality);
                 panel.find(".contact-locality").text(contact.locality);
+                panel.find(".contact-sub-administrative-area").text(contact.subAdministrativeArea);
                 panel.find(".contact-administrative-area").text(contact.administrativeArea);
                 panel.find(".contact-postal-code").text(contact.postalCode);
                 panel.find(".contact-country").text(contact.country);
