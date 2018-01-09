@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 
 $solutionPath = Split-Path $MyInvocation.MyCommand.Definition
 $solutionFile = Join-Path $solutionPath "ApplePayJS.sln"
-$dotnetVersion = "2.0.3"
+$dotnetVersion = "2.1.4"
 
 if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
