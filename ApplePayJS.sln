@@ -1,19 +1,32 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26114.2
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ABF2B260-1BAE-45CD-9348-C163CA02ECA3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C697BCC9-C4F9-4AD8-8336-E90A239865DE}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
 		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		appveyor.yml = appveyor.yml
+		Build.ps1 = Build.ps1
+		build.sh = build.sh
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		global.json = global.json
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplePayJS", "src\ApplePayJS\ApplePayJS.csproj", "{4CFD067B-FD1A-4303-9322-3138E9104B1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplePayJS", "src\ApplePayJS\ApplePayJS.csproj", "{4CFD067B-FD1A-4303-9322-3138E9104B1F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A4EFB4F4-BC05-4A67-89AC-4D7D21B71D4E}"
+	ProjectSection(SolutionItems) = preProject
+		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
+		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
+		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,5 +44,9 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4CFD067B-FD1A-4303-9322-3138E9104B1F} = {ABF2B260-1BAE-45CD-9348-C163CA02ECA3}
+		{A4EFB4F4-BC05-4A67-89AC-4D7D21B71D4E} = {C697BCC9-C4F9-4AD8-8336-E90A239865DE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8797D09A-407D-424A-A8F0-22FB26F0650C}
 	EndGlobalSection
 EndGlobal
