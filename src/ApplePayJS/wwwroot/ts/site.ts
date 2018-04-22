@@ -231,7 +231,7 @@ namespace justEat {
          */
         private hideSetupButton(): void {
             const button = $("#set-up-apple-pay-button");
-            button.addClass("hide");
+            button.addClass("d-none");
             button.off("click");
         }
 
@@ -368,7 +368,7 @@ namespace justEat {
                 button.addClass("apple-pay-button-black");
             }
 
-            button.removeClass("hide");
+            button.removeClass("d-none");
         }
 
         /**
@@ -378,7 +378,7 @@ namespace justEat {
         private showError(text: string): void {
             const error = $(".apple-pay-error");
             error.text(text);
-            error.removeClass("hide");
+            error.removeClass("d-none");
         }
 
         /**
@@ -388,7 +388,7 @@ namespace justEat {
             const button = $("#set-up-apple-pay-button");
             button.attr("lang", this.getPageLanguage());
             button.on("click", this.setupApplePay);
-            button.removeClass("hide");
+            button.removeClass("d-none");
         }
 
         /**
@@ -397,7 +397,7 @@ namespace justEat {
         private showSuccess() {
             $(".apple-pay-intro").hide();
             const success = $(".apple-pay-success");
-            success.removeClass("hide");
+            success.removeClass("d-none");
         }
 
         /**
@@ -428,7 +428,7 @@ namespace justEat {
                     .text(contact.emailAddress)
                     .attr("href", "mailto:" + contact.emailAddress)
                     .append("<br/>")
-                    .removeClass("hide");
+                    .removeClass("d-none");
             }
 
             if (contact.phoneNumber) {
@@ -436,14 +436,14 @@ namespace justEat {
                     .text(contact.phoneNumber)
                     .attr("href", "tel:" + contact.phoneNumber)
                     .append("<br/>")
-                    .removeClass("hide");
+                    .removeClass("d-none");
             }
 
             if (contact.givenName) {
                 panel.find(".contact-name")
                     .text(contact.givenName + " " + contact.familyName)
                     .append("<br/>")
-                    .removeClass("hide");
+                    .removeClass("d-none");
             }
 
             if (contact.addressLines) {
@@ -454,7 +454,7 @@ namespace justEat {
                 panel.find(".contact-administrative-area").text(contact.administrativeArea);
                 panel.find(".contact-postal-code").text(contact.postalCode);
                 panel.find(".contact-country").text(contact.country);
-                panel.find(".contact-address").removeClass("hide");
+                panel.find(".contact-address").removeClass("d-none");
             }
         }
     }
