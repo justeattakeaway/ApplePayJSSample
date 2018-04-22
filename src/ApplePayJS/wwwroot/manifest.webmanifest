@@ -1,7 +1,7 @@
 {
   "name": "Apple Pay JS Sample",
   "short_name": "Apple Pay JS",
-  "description": "An sample implementation of Apple Pay JS using ASP.NET Core.",
+  "description": "A sample implementation of Apple Pay JS using ASP.NET Core.",
   "start_url": "/",
   "background_color": "#fff",
   "theme_color": "#222",
