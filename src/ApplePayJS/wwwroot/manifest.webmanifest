@@ -1,33 +1,38 @@
 {
   "name": "Apple Pay JS Sample",
   "short_name": "Apple Pay JS",
+  "description": "A sample implementation of Apple Pay JS using ASP.NET Core.",
   "start_url": "/",
   "background_color": "#fff",
   "theme_color": "#222",
+  "display": "minimal-ui",
+  "lang": "en-GB",
+  "dir": "ltr",
   "icons": [
     {
       "src": "/apple-touch-icon-120x120.png",
       "sizes": "120x120",
-      "type": "image/png",
-      "density": 2.0
+      "type": "image/png"
     },
     {
       "src": "/apple-touch-icon-152x152.png",
       "sizes": "152x152",
-      "type": "image/png",
-      "density": 3.0
+      "type": "image/png"
     },
     {
       "src": "/apple-touch-icon-180x180.png",
       "sizes": "180x180",
-      "type": "image/png",
-      "density": 4.0
+      "type": "image/png"
     },
     {
       "src": "/apple-touch-icon-250x250.png",
       "sizes": "250x250",
-      "type": "image/png",
-      "density": 5.0
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
   ]
 }

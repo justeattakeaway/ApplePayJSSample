@@ -61,11 +61,11 @@
 *@
 <div class="container">
     <div class="row">
-        <div class="panel panel-primary apple-pay-intro">
-            <div class="panel-heading">
-                Apple Pay JS
+        <div class="card apple-pay-intro">
+            <div class="card-header">
+                <h1 class="h5">Apple Pay JS</h1>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <p class="lead">
                     This page demonstrates an integration of <a href="https://developer.apple.com/reference/applepayjs/" rel="noopener" target="_blank">Apple Pay JS</a>.
                 </p>
@@ -78,69 +78,77 @@
                 </p>
             </div>
         </div>
+    </div>
+    <div class="row mt-3">
         @*
             Used to display a message in browsers where Apple Pay cannot be used.
         *@
-        <div class="alert alert-warning apple-pay-error hide" role="alert"></div>
+        <div class="alert alert-warning apple-pay-error col d-none" role="alert"></div>
         @*
             Used to display a message and payment details when an Apple Pay payment is successfully authorized.
         *@
-        <div class="panel panel-success apple-pay-success hide">
-            <div class="panel-heading">Payment successful</div>
-            <div class="panel-body">
-                <p class="lead">
-                    Your Apple Pay payment was processed successfully using <span class="card-name"></span>.
-                </p>
-                <div class="panel panel-default">
-                    <div class="panel-heading">Billing Contact</div>
-                    <div class="panel-body">
-                        <address id="billing-contact">
-                            <strong class="contact-name hide"></strong>
-                            <a class="contact-email hide" href=""></a>
-                            <a class="contact-telephone hide" href=""></a>
-                            <div class="contact-address hide">
-                                <hr />
-                                <span class="contact-address-lines"></span><br />
-                                <span class="contact-sub-locality"></span><br />
-                                <span class="contact-locality"></span><br />
-                                <span class="contact-sub-administrative-area"></span><br />
-                                <span class="contact-administrative-area"></span><br />
-                                <span class="contact-postal-code"></span><br />
-                                <span class="contact-country"></span><br />
-                            </div>
-                        </address>
+        <div class="col apple-pay-success d-none">
+            <div class="card card-success">
+                <div class="card-header">Payment successful</div>
+                <div class="card-body">
+                    <p class="lead">
+                        Your Apple Pay payment was processed successfully using <span class="card-name"></span>.
+                    </p>
+                    <div class="card">
+                        <div class="card-header">Billing Contact</div>
+                        <div class="card-body">
+                            <address id="billing-contact">
+                                <strong class="contact-name d-none"></strong>
+                                <a class="contact-email d-none" href=""></a>
+                                <a class="contact-telephone d-none" href=""></a>
+                                <div class="contact-address d-none">
+                                    <hr />
+                                    <span class="contact-address-lines"></span><br />
+                                    <span class="contact-sub-locality"></span><br />
+                                    <span class="contact-locality"></span><br />
+                                    <span class="contact-sub-administrative-area"></span><br />
+                                    <span class="contact-administrative-area"></span><br />
+                                    <span class="contact-postal-code"></span><br />
+                                    <span class="contact-country"></span><br />
+                                </div>
+                            </address>
+                        </div>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">Shipping Contact</div>
-                    <div class="panel-body">
-                        <address id="shipping-contact">
-                            <strong class="contact-name hide"></strong>
-                            <a class="contact-email hide" href=""></a>
-                            <a class="contact-telephone hide" href=""></a>
-                            <div class="contact-address hide">
-                                <hr />
-                                <span class="contact-address-lines"></span><br />
-                                <span class="contact-sub-locality"></span><br />
-                                <span class="contact-locality"></span><br />
-                                <span class="contact-sub-administrative-area"></span><br />
-                                <span class="contact-administrative-area"></span><br />
-                                <span class="contact-postal-code"></span><br />
-                                <span class="contact-country"></span><br />
-                            </div>
-                        </address>
+                    <div class="card mt-3">
+                        <div class="card-header">Shipping Contact</div>
+                        <div class="card-body">
+                            <address id="shipping-contact">
+                                <strong class="contact-name d-none"></strong>
+                                <a class="contact-email d-none" href=""></a>
+                                <a class="contact-telephone d-none" href=""></a>
+                                <div class="contact-address d-none">
+                                    <hr />
+                                    <span class="contact-address-lines"></span><br />
+                                    <span class="contact-sub-locality"></span><br />
+                                    <span class="contact-locality"></span><br />
+                                    <span class="contact-sub-administrative-area"></span><br />
+                                    <span class="contact-administrative-area"></span><br />
+                                    <span class="contact-postal-code"></span><br />
+                                    <span class="contact-country"></span><br />
+                                </div>
+                            </address>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <form>
+    </div>
+    <div class="row mt-3">
+        <form class="col">
             <fieldset class="form-group">
                 <label class="sr-only" for="amount">Amount (in @currencyCode)</label>
                 <div class="input-group input-group-lg">
                     @*
                         Add a number input for the amount to charge in the Apple Pay Sheet.
                     *@
-                    <span class="input-group-addon" id="amount-addon">@currencySymbol</span>
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="amount-addon">@currencySymbol</span>
+                    </div>
                     <input type="number"
                            aria-describedby="amount-addon"
                            autocomplete="off"
@@ -159,12 +167,12 @@
                 JavaScript determines that Apple Pay is available, but there are
                 no payment cards set up in Wallet.
             *@
-            <div id="set-up-apple-pay-button" class="apple-pay apple-pay-set-up-button apple-pay-set-up-button-black input-block-level hide"></div>
+            <div id="set-up-apple-pay-button" class="apple-pay apple-pay-set-up-button apple-pay-set-up-button-black input-block-level d-none"></div>
             @*
                 Used to render the Apple Pay button, which is shown if the
                 JavaScript determines that Apple Pay is available for use.
             *@
-            <div id="apple-pay-button" class="apple-pay input-block-level hide"></div>
+            <div id="apple-pay-button" class="apple-pay input-block-level d-none"></div>
         </form>
     </div>
 </div>

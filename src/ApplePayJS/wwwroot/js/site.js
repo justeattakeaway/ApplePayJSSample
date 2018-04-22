@@ -140,7 +140,7 @@ justEat = {
                              .text(contact.emailAddress)
                              .attr("href", "mailto:" + contact.emailAddress)
                              .append("<br/>")
-                             .removeClass("hide");
+                             .removeClass("d-none");
                     }
 
                     if (contact.phoneNumber) {
@@ -148,14 +148,14 @@ justEat = {
                              .text(contact.phoneNumber)
                              .attr("href", "tel:" + contact.phoneNumber)
                              .append("<br/>")
-                             .removeClass("hide");
+                             .removeClass("d-none");
                     }
 
                     if (contact.givenName) {
                         panel.find(".contact-name")
                              .text(contact.givenName + " " + contact.familyName)
                              .append("<br/>")
-                             .removeClass("hide");
+                             .removeClass("d-none");
                     }
 
                     if (contact.addressLines) {
@@ -166,7 +166,7 @@ justEat = {
                         panel.find(".contact-administrative-area").text(contact.administrativeArea);
                         panel.find(".contact-postal-code").text(contact.postalCode);
                         panel.find(".contact-country").text(contact.country);
-                        panel.find(".contact-address").removeClass("hide");
+                        panel.find(".contact-address").removeClass("d-none");
                     }
                 };
 
@@ -217,28 +217,28 @@ justEat = {
                 button.addClass("apple-pay-button-black");
             }
 
-            button.removeClass("hide");
+            button.removeClass("d-none");
         },
         showSetupButton: function () {
             var button = $("#set-up-apple-pay-button");
             button.attr("lang", justEat.applePay.getPageLanguage());
             button.on("click", $.proxy(justEat.applePay, "setupApplePay"));
-            button.removeClass("hide");
+            button.removeClass("d-none");
         },
         hideSetupButton: function () {
             var button = $("#set-up-apple-pay-button");
-            button.addClass("hide");
+            button.addClass("d-none");
             button.off("click");
         },
         showError: function (text) {
             var error = $(".apple-pay-error");
             error.text(text);
-            error.removeClass("hide");
+            error.removeClass("d-none");
         },
         showSuccess: function () {
             $(".apple-pay-intro").hide();
             var success = $(".apple-pay-success");
-            success.removeClass("hide");
+            success.removeClass("d-none");
         },
         supportedByDevice: function () {
             return "ApplePaySession" in window;
