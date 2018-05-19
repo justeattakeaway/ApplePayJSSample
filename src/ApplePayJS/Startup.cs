@@ -3,6 +3,8 @@
 
 namespace JustEat.ApplePayJS
 {
+    using System.Net.Http;
+    using JustEat.ApplePayJS.Clients;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -48,7 +50,28 @@ namespace JustEat.ApplePayJS
                 })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<IConfiguration>(Configuration);
+            // Register class for managing the application's use of the Apple Pay merchant certificate
+            services.AddSingleton<MerchantCertificate>();
+
+            // Create a typed HTTP client with the merchant certificate for two-way TLS authentication over HTTPS.
+            services
+                .AddHttpClient<ApplePayClient>("ApplePay")
+                .ConfigurePrimaryHttpMessageHandler(
+                    (serviceProvider) =>
+                    {
+                        var merchantCertificate = serviceProvider.GetRequiredService<MerchantCertificate>();
+                        var certificate = merchantCertificate.GetCertificate();
+
+                        var handler = new HttpClientHandler();
+                        handler.ClientCertificates.Add(certificate);
+
+                        // Apple Pay JS requires the use of at least TLS 1.2 to generate a merchange session:
+                        // https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
+                        // If you run an older operating system that does not negotiate this by default, uncomment the line below.
+                        // handler.SslProtocols = SslProtocols.Tls12;
+
+                        return handler;
+                    });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
