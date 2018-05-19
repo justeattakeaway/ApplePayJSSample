@@ -32,10 +32,13 @@ namespace JustEat.ApplePayJS.Controllers
         public IActionResult Index()
         {
             // Get the merchant identifier and store name for use in the JavaScript by ApplePaySession.
-            ViewData["MerchantId"] = _certificate.GetMerchantIdentifier();
-            ViewData["StoreName"] = _options.StoreName;
+            var model = new HomeModel()
+            {
+                MerchantId = _certificate.GetMerchantIdentifier(),
+                StoreName = _options.StoreName,
+            };
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
