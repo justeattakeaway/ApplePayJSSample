@@ -14,24 +14,13 @@ namespace JustEat.ApplePayJS
 
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
-            Configuration = builder.Build();
+            Configuration = configuration;
             Environment = env;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         public IHostingEnvironment Environment { get; }
 
@@ -47,15 +36,17 @@ namespace JustEat.ApplePayJS
                 options.HeaderName = "x-antiforgery-token";
             });
 
-            services.AddMvc(options =>
-            {
-                // Apple Pay JS requires pages to be served over HTTPS
-                if (Environment.IsProduction())
+            services.AddMvc(
+                options =>
                 {
-                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    options.Filters.Add(new RequireHttpsAttribute());
-                }
-            });
+                    // Apple Pay JS requires pages to be served over HTTPS
+                    if (Environment.IsProduction())
+                    {
+                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                        options.Filters.Add(new RequireHttpsAttribute());
+                    }
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IConfiguration>(Configuration);
         }
@@ -75,18 +66,16 @@ namespace JustEat.ApplePayJS
                    .UseStatusCodePages();
             }
 
+            app.UseHsts()
+               .UseHttpsRedirection();
+
             app.UseStaticFiles(
                 new StaticFileOptions()
                 {
                     ServeUnknownFileTypes = true, // Required to serve the files in the .well-known folder
                 });
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
