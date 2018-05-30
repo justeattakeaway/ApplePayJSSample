@@ -83,7 +83,7 @@ namespace justEat {
 
             // Get the amount to request from the form and set up
             // the totals and line items for collection and delivery.
-            const subtotal = $("#amount").val();
+            const subtotal = $("#amount").val().toString();
             const delivery = "0.01";
             const deliveryTotal = (parseFloat(subtotal) + parseFloat(delivery)).toString(10);
 

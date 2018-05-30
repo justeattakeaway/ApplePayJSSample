@@ -3,6 +3,8 @@
 
 namespace JustEat.ApplePayJS
 {
+    using System.Net.Http;
+    using JustEat.ApplePayJS.Clients;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -14,24 +16,13 @@ namespace JustEat.ApplePayJS
 
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
-                builder.AddUserSecrets<Startup>();
-            }
-
-            Configuration = builder.Build();
+            Configuration = configuration;
             Environment = env;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         public IHostingEnvironment Environment { get; }
 
@@ -47,17 +38,40 @@ namespace JustEat.ApplePayJS
                 options.HeaderName = "x-antiforgery-token";
             });
 
-            services.AddMvc(options =>
-            {
-                // Apple Pay JS requires pages to be served over HTTPS
-                if (Environment.IsProduction())
+            services.AddMvc(
+                options =>
                 {
-                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    options.Filters.Add(new RequireHttpsAttribute());
-                }
-            });
+                    // Apple Pay JS requires pages to be served over HTTPS
+                    if (Environment.IsProduction())
+                    {
+                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                        options.Filters.Add(new RequireHttpsAttribute());
+                    }
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<IConfiguration>(Configuration);
+            // Register class for managing the application's use of the Apple Pay merchant certificate
+            services.AddSingleton<MerchantCertificate>();
+
+            // Create a typed HTTP client with the merchant certificate for two-way TLS authentication over HTTPS.
+            services
+                .AddHttpClient<ApplePayClient>("ApplePay")
+                .ConfigurePrimaryHttpMessageHandler(
+                    (serviceProvider) =>
+                    {
+                        var merchantCertificate = serviceProvider.GetRequiredService<MerchantCertificate>();
+                        var certificate = merchantCertificate.GetCertificate();
+
+                        var handler = new HttpClientHandler();
+                        handler.ClientCertificates.Add(certificate);
+
+                        // Apple Pay JS requires the use of at least TLS 1.2 to generate a merchange session:
+                        // https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
+                        // If you run an older operating system that does not negotiate this by default, uncomment the line below.
+                        // handler.SslProtocols = SslProtocols.Tls12;
+
+                        return handler;
+                    });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -75,18 +89,16 @@ namespace JustEat.ApplePayJS
                    .UseStatusCodePages();
             }
 
+            app.UseHsts()
+               .UseHttpsRedirection();
+
             app.UseStaticFiles(
                 new StaticFileOptions()
                 {
                     ServeUnknownFileTypes = true, // Required to serve the files in the .well-known folder
                 });
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

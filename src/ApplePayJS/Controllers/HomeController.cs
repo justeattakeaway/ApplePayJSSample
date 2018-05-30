@@ -4,40 +4,47 @@
 namespace JustEat.ApplePayJS.Controllers
 {
     using System;
-    using System.Net.Http;
-    using System.Security.Authentication;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
+    using JustEat.ApplePayJS.Clients;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
-    using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     public class HomeController : Controller
     {
+        private readonly ApplePayClient _client;
+        private readonly MerchantCertificate _certificate;
         private readonly ApplePayOptions _options;
 
-        public HomeController(IOptions<ApplePayOptions> options)
+        public HomeController(
+            ApplePayClient client,
+            MerchantCertificate certificate,
+            IOptions<ApplePayOptions> options)
         {
+            _client = client;
+            _certificate = certificate;
             _options = options.Value;
         }
 
         public IActionResult Index()
         {
             // Get the merchant identifier and store name for use in the JavaScript by ApplePaySession.
-            ViewData["MerchantId"] = GetMerchantIdentifier();
-            ViewData["StoreName"] = _options.StoreName;
+            var model = new HomeModel()
+            {
+                MerchantId = _certificate.GetMerchantIdentifier(),
+                StoreName = _options.StoreName,
+            };
 
-            return View();
+            return View(model);
         }
 
         [HttpPost]
         [Produces("application/json")]
         [Route("applepay/validate", Name = "MerchantValidation")]
-        public async Task<IActionResult> Validate([FromBody] ValidateMerchantSessionModel model)
+        public async Task<IActionResult> Validate([FromBody] ValidateMerchantSessionModel model, CancellationToken cancellationToken = default)
         {
             // You may wish to additionally validate that the URI specified for merchant validation in the
             // request body is a documented Apple Pay JS hostname. The IP addresses and DNS hostnames of
@@ -49,135 +56,20 @@ namespace JustEat.ApplePayJS.Controllers
                 return BadRequest();
             }
 
-            // Load the merchant certificate for two-way TLS authentication with the Apple Pay server.
-            var certificate = LoadMerchantCertificate();
-
-            // Get the merchant identifier from the certificate to send in the validation payload.
-            var merchantIdentifier = GetMerchantIdentifier(certificate);
-
             // Create the JSON payload to POST to the Apple Pay merchant validation URL.
-            var payload = new
+            var request = new MerchantSessionRequest()
             {
-                merchantIdentifier = merchantIdentifier,
-                domainName = Request.GetTypedHeaders().Host.Value,
-                displayName = _options.StoreName
+                MerchantIdentifier = _certificate.GetMerchantIdentifier(),
+                DomainName = Request.GetTypedHeaders().Host.Value,
+                DisplayName = _options.StoreName
             };
 
-            JObject merchantSession;
-
-            // Create an HTTP client with the merchant certificate
-            // for two-way TLS authentication over HTTPS.
-            using (var httpClient = CreateHttpClient(certificate))
-            {
-                var jsonPayload = JsonConvert.SerializeObject(payload);
-
-                using (var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json"))
-                {
-                    // POST the data to create a valid Apple Pay merchant session.
-                    using (var response = await httpClient.PostAsync(requestUri, content))
-                    {
-                        response.EnsureSuccessStatusCode();
-
-                        // Read the opaque merchant session JSON from the response body.
-                        var merchantSessionJson = await response.Content.ReadAsStringAsync();
-                        merchantSession = JObject.Parse(merchantSessionJson);
-                    }
-                }
-            }
+            JObject merchantSession = await _client.GetMerchantSessionAsync(requestUri, request, cancellationToken);
 
             // Return the merchant session as-is to the JavaScript as JSON.
             return Json(merchantSession);
         }
 
-        public IActionResult Error()
-        {
-            return View();
-        }
-
-        private HttpClient CreateHttpClient(X509Certificate2 certificate)
-        {
-            var handler = new HttpClientHandler();
-            handler.ClientCertificates.Add(certificate);
-
-            // Apple Pay JS requires the use of TLS 1.2 to generate a merchange session:
-            // https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
-            handler.SslProtocols = SslProtocols.Tls12;
-
-            return new HttpClient(handler, disposeHandler: true);
-        }
-
-        private X509Certificate2 LoadMerchantCertificate()
-        {
-            X509Certificate2 certificate;
-
-            if (_options.UseCertificateStore)
-            {
-                // Load the certificate from the current user's certificate store. This
-                // is useful if you do not want to publish the merchant certificate with
-                // your application, but it is also required to be able to use an X.509
-                // certificate with a private key if the user profile is not available,
-                // such as when using IIS hosting in an environment such as Microsoft Azure.
-                using (var store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-                {
-                    store.Open(OpenFlags.ReadOnly);
-
-                    var certificates = store.Certificates.Find(
-                        X509FindType.FindByThumbprint,
-                        _options.MerchantCertificateThumbprint?.Trim(),
-                        validOnly: false);
-
-                    if (certificates.Count < 1)
-                    {
-                        throw new InvalidOperationException(
-                            $"Could not find Apple Pay merchant certificate with thumbprint '{_options.MerchantCertificateThumbprint}' from store '{store.Name}' in location '{store.Location}'.");
-                    }
-
-                    certificate = certificates[0];
-                }
-            }
-            else
-            {
-                try
-                {
-                    // Load the X.509 certificate from disk
-                    certificate = new X509Certificate2(
-                        _options.MerchantCertificateFileName,
-                        _options.MerchantCertificatePassword);
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException($"Failed to load Apple Pay merchant certificate file from '{_options.MerchantCertificateFileName}'.", ex);
-                }
-            }
-
-            return certificate;
-        }
-
-        private string GetMerchantIdentifier()
-        {
-            try
-            {
-                var merchantCertificate = LoadMerchantCertificate();
-                return GetMerchantIdentifier(merchantCertificate);
-            }
-            catch (InvalidOperationException)
-            {
-                return string.Empty;
-            }
-        }
-
-        private string GetMerchantIdentifier(X509Certificate2 certificate)
-        {
-            // This OID returns the ASN.1 encoded merchant identifier
-            var extension = certificate.Extensions["1.2.840.113635.100.6.32"];
-
-            if (extension == null)
-            {
-                return string.Empty;
-            }
-
-            // Convert the raw ASN.1 data to a string containing the ID
-            return Encoding.ASCII.GetString(extension.RawData).Substring(2);
-        }
+        public IActionResult Error() => View();
     }
 }
