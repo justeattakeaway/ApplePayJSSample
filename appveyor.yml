@@ -10,7 +10,7 @@ branches:
     - master
 
 install:
-  - ps: npm install -g bower@1.8.0 --loglevel=error
+  - ps: npm install -g bower --loglevel=error
   - ps: npm install -g npm
 
 build_script:
