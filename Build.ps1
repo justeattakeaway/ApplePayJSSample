@@ -16,20 +16,26 @@ if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
 }
 
-if ($env:CI -ne $null) {
+if ($null -ne $env:CI) {
     $RestorePackages = $true
 }
 
 $installDotNetSdk = $false;
 
-if (((Get-Command "dotnet.exe" -ErrorAction SilentlyContinue) -eq $null) -and ((Get-Command "dotnet" -ErrorAction SilentlyContinue) -eq $null)) {
+if (($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue))) {
     Write-Host "The .NET Core SDK is not installed."
     $installDotNetSdk = $true
 }
 else {
-    $installedDotNetVersion = (dotnet --version | Out-String).Trim()
+    Try {
+        $installedDotNetVersion = (dotnet --version 2>&1 | Out-String).Trim()
+    }
+    Catch {
+        $installedDotNetVersion = "?"
+    }
+
     if ($installedDotNetVersion -ne $dotnetVersion) {
-        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion but $installedDotNetVersion was found."
+        Write-Host "The required version of the .NET Core SDK is not installed. Expected $dotnetVersion."
         $installDotNetSdk = $true
     }
 }
@@ -52,8 +58,8 @@ else {
 }
 
 if ($RestorePackages -eq $true) {
-    Write-Host "Restoring NuGet packages for solution..." -ForegroundColor Green
-    & $dotnet restore $solutionFile --verbosity minimal
+
+    Write-Host "Restoring JavaScript packages..." -ForegroundColor Green
 
     $projectPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "src"
     $projectPath = Join-Path $projectPath "ApplePayJs"
