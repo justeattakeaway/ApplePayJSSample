@@ -11,7 +11,6 @@ namespace JustEat.ApplePayJS
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Models;
 
     public class Startup
@@ -48,7 +47,7 @@ namespace JustEat.ApplePayJS
                         options.Filters.Add(new RequireHttpsAttribute());
                     }
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Register class for managing the application's use of the Apple Pay merchant certificate
             services.AddSingleton<MerchantCertificate>();
@@ -74,11 +73,8 @@ namespace JustEat.ApplePayJS
                     });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

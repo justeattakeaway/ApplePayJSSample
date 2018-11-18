@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceRoot}/src/ApplePayJS/bin/Debug/netcoreapp2.1/JustEat.ApplePayJS.dll",
+      "program": "${workspaceRoot}/src/ApplePayJS/bin/Debug/netcoreapp2.2/JustEat.ApplePayJS.dll",
       "args": [],
       "cwd": "${workspaceRoot}/src/ApplePayJS",
       "stopAtEntry": false,
