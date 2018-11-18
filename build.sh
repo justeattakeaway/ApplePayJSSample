@@ -42,7 +42,7 @@ fi
 if [ $restorePackages == 1 ]; then
     dotnet restore ./ApplePayJS.sln --verbosity minimal || exit 1
     pushd ./src/ApplePayJS
-    npm install || exit 1
+    npm ci || exit 1
     bower install || exit 1
     popd
 fi

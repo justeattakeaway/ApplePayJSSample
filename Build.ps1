@@ -68,7 +68,7 @@ if ($RestorePackages -eq $true) {
     $projectPath = Join-Path $projectPath "ApplePayJs"
 
     Push-Location $projectPath
-    & npm install
+    & npm ci
     & bower install
     Pop-Location
 }
