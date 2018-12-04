@@ -4,8 +4,6 @@ param(
     [Parameter(Mandatory = $false)][string] $OutputPath = ""
 )
 
-$ErrorActionPreference = "Stop"
-
 $solutionPath = Split-Path $MyInvocation.MyCommand.Definition
 $solutionFile = Join-Path $solutionPath "ApplePayJS.sln"
 $sdkFile = Join-Path $solutionPath "global.json"
