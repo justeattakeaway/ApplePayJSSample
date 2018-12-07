@@ -3,7 +3,6 @@
 root=$(cd "$(dirname "$0")"; pwd -P)
 artifacts=$root/artifacts
 configuration=Release
-restorePackages=0
 
 while :; do
     if [ $# -le 0 ]; then
@@ -15,10 +14,6 @@ while :; do
         -\?|-h|--help)
             echo "./build.sh [--restore-packages] [--skip-tests]"
             exit 1
-            ;;
-
-        --restore-packages)
-            restorePackages=1
             ;;
 
         *)
@@ -37,14 +32,6 @@ dotnet_version=$(dotnet --version)
 
 if [ "$dotnet_version" != "$CLI_VERSION" ]; then
     curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
-fi
-
-if [ $restorePackages == 1 ]; then
-    dotnet restore ./ApplePayJS.sln --verbosity minimal || exit 1
-    pushd ./src/ApplePayJS
-    npm ci || exit 1
-    bower install || exit 1
-    popd
 fi
 
 dotnet publish ./ApplePayJS.sln --output $artifacts/publish --configuration $configuration || exit 1

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <AspNetCoreHostingModel>inprocess</AspNetCoreHostingModel>
     <Authors>Martin Costello</Authors>
@@ -31,6 +31,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
+  <PropertyGroup Condition=" '$(InstallWebPackages)' == '' and ('$(CI)' != '' or !Exists('$(MSBuildThisFileDirectory)\node_modules')) ">
+    <InstallWebPackages>true</InstallWebPackages>
+  </PropertyGroup>
+  <Target Name="InstallPackages" BeforeTargets="Build" Condition=" '$(InstallWebPackages)' == 'true' ">
+    <Exec Command="npm ci" />
+    <Exec Command="bower install" />
+  </Target>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm run build" />
     <Exec Command="npm run lint" />

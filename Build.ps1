@@ -1,8 +1,9 @@
 param(
-    [Parameter(Mandatory = $false)][switch] $RestorePackages,
     [Parameter(Mandatory = $false)][string] $Configuration = "Release",
     [Parameter(Mandatory = $false)][string] $OutputPath = ""
 )
+
+$ErrorActionPreference = "Stop"
 
 $solutionPath = Split-Path $MyInvocation.MyCommand.Definition
 $solutionFile = Join-Path $solutionPath "ApplePayJS.sln"
@@ -12,10 +13,6 @@ $dotnetVersion = (Get-Content $sdkFile | ConvertFrom-Json).sdk.version
 
 if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
-}
-
-if ($null -ne $env:CI) {
-    $RestorePackages = $true
 }
 
 $installDotNetSdk = $false;
@@ -56,19 +53,6 @@ if ($installDotNetSdk -eq $true) {
 }
 else {
     $dotnet = "dotnet"
-}
-
-if ($RestorePackages -eq $true) {
-
-    Write-Host "Restoring JavaScript packages..." -ForegroundColor Green
-
-    $projectPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "src"
-    $projectPath = Join-Path $projectPath "ApplePayJs"
-
-    Push-Location $projectPath
-    & npm ci
-    & bower install
-    Pop-Location
 }
 
 Write-Host "Publishing solution..." -ForegroundColor Green
