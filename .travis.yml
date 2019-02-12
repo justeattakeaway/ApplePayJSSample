@@ -1,5 +1,5 @@
 sudo: required
-dist: trusty
+dist: xenial
 
 os:
   - linux
@@ -28,4 +28,4 @@ install:
   - npm install -g npm
 
 script:
-  - ./build.sh --restore-packages
+  - ./build.sh
