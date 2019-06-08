@@ -52,8 +52,12 @@ if ($installDotNetSdk -eq $true) {
     $dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet.exe"
 }
 else {
-    $dotnet = "dotnet"
+    $dotnet = "dotnet.exe"
 }
 
 Write-Host "Publishing solution..." -ForegroundColor Green
 & $dotnet publish $solutionFile --output $OutputPath --configuration $Configuration
+
+if ($LASTEXITCODE -ne 0) {
+    throw "dotnet publish failed with exit code $LASTEXITCODE"
+}
