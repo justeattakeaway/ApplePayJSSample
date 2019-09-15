@@ -59,9 +59,10 @@ namespace JustEat.ApplePayJS.Controllers
             // Create the JSON payload to POST to the Apple Pay merchant validation URL.
             var request = new MerchantSessionRequest()
             {
+                DisplayName = _options.StoreName,
+                Initiative = "web",
+                InitiativeContext = Request.GetTypedHeaders().Host.Value,
                 MerchantIdentifier = _certificate.GetMerchantIdentifier(),
-                DomainName = Request.GetTypedHeaders().Host.Value,
-                DisplayName = _options.StoreName
             };
 
             JObject merchantSession = await _client.GetMerchantSessionAsync(requestUri, request, cancellationToken);

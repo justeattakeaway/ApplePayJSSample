@@ -156,7 +156,7 @@
                            autofocus
                            class="form-control input-block-level"
                            id="amount"
-                           min="0.01"
+                           min="0.00"
                            pattern="\d*(.\d\d)?"
                            placeholder="Amount"
                            step="0.01"
@@ -168,12 +168,12 @@
                 JavaScript determines that Apple Pay is available, but there are
                 no payment cards set up in Wallet.
             *@
-            <div id="set-up-apple-pay-button" class="apple-pay apple-pay-set-up-button apple-pay-set-up-button-black input-block-level d-none"></div>
+            <div id="set-up-apple-pay-button" class="apple-pay apple-pay-set-up-button apple-pay-set-up-button-black input-block-level d-none" lang="@countryCode"></div>
             @*
                 Used to render the Apple Pay button, which is shown if the
                 JavaScript determines that Apple Pay is available for use.
             *@
-            <div id="apple-pay-button" class="apple-pay input-block-level d-none"></div>
+            <div id="apple-pay-button" class="apple-pay input-block-level d-none" lang="@countryCode"></div>
         </form>
     </div>
 </div>

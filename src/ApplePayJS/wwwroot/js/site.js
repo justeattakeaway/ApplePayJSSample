@@ -39,6 +39,7 @@ justEat = {
 
             // Create the Apple Pay payment request as appropriate.
             var paymentRequest = {
+                applicationData: btoa("Custom application-specific data"),
                 countryCode: countryCode,
                 currencyCode: currencyCode,
                 merchantCapabilities: [ "supports3DS" ],
@@ -67,7 +68,7 @@ justEat = {
             // };
 
             // Create the Apple Pay session.
-            var session = new ApplePaySession(3, paymentRequest);
+            var session = new ApplePaySession(6, paymentRequest);
 
             // Setup handler for validation the merchant session.
             session.onvalidatemerchant = function (event) {
