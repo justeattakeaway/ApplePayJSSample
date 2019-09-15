@@ -12,6 +12,7 @@ branches:
 install:
   - ps: npm install --global bower --loglevel=error
   - ps: npm install --global npm
+  - ps: choco upgrade googlechrome --confirm --ignore-checksums --no-progress
 
 build_script:
   - ps: .\Build.ps1

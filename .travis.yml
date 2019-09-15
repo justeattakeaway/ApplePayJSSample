@@ -20,10 +20,13 @@ addons:
   apt:
     packages:
     - gettext
+    - google-chrome-stable
     - libcurl4-openssl-dev
     - libicu-dev
     - libssl-dev
     - libunwind8
+    sources:
+    - google-chrome
 
 install:
   - npm install --global bower

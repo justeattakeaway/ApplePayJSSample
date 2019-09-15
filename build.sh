@@ -35,3 +35,4 @@ if [ "$dotnet_version" != "$CLI_VERSION" ]; then
 fi
 
 dotnet publish ./ApplePayJS.sln --output $artifacts/publish --configuration $configuration || exit 1
+dotnet test ./ApplePayJS.sln --output $artifacts --configuration $configuration || exit 1
