@@ -1,19 +1,19 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace JustEat.ApplePayJS.Clients
 {
     public class MerchantSessionRequest
     {
-        [JsonProperty("merchantIdentifier")]
-        public string MerchantIdentifier { get; set; }
+        [JsonPropertyName("merchantIdentifier")]
+        public string? MerchantIdentifier { get; set; }
 
-        [JsonProperty("displayName")]
-        public string DisplayName { get; set; }
+        [JsonPropertyName("displayName")]
+        public string? DisplayName { get; set; }
 
-        [JsonProperty("initiative")]
-        public string Initiative { get; set; }
+        [JsonPropertyName("initiative")]
+        public string? Initiative { get; set; }
 
-        [JsonProperty("initiativeContext")]
-        public string InitiativeContext { get; set; }
+        [JsonPropertyName("initiativeContext")]
+        public string? InitiativeContext { get; set; }
     }
 }
