@@ -188,6 +188,7 @@ namespace justEat {
          */
         private createPaymentRequest = (deliveryAmount: string, lineItems: ApplePayJS.ApplePayLineItem[], total: ApplePayJS.ApplePayLineItem): ApplePayJS.ApplePayPaymentRequest => {
             let paymentRequest: ApplePayJS.ApplePayPaymentRequest = {
+                applicationData: btoa("Custom application-specific data"),
                 countryCode: this.countryCode,
                 currencyCode: this.currencyCode,
                 merchantCapabilities: ["supports3DS", "supportsCredit", "supportsDebit"],
