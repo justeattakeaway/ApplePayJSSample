@@ -30,7 +30,7 @@ namespace justEat {
             this.validationResource = $("link[rel='merchant-validation']").attr("href");
 
             // Set the Apple Pay JS version to use
-            this.applePayVersion = 3;
+            this.applePayVersion = 6;
 
             // Set the appropriate ISO country and currency codes
             this.countryCode = $("meta[name='payment-country-code']").attr("content") || "GB";
