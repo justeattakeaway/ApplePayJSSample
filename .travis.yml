@@ -1,5 +1,7 @@
 sudo: required
 dist: xenial
+language: csharp
+mono: none
 
 os:
   - linux
@@ -24,8 +26,8 @@ addons:
     - libunwind8
 
 install:
-  - npm install -g bower
-  - npm install -g npm
+  - npm install --global bower
+  - npm install --global npm
 
 script:
   - ./build.sh
