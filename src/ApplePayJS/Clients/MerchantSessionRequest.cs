@@ -7,10 +7,13 @@ namespace JustEat.ApplePayJS.Clients
         [JsonProperty("merchantIdentifier")]
         public string MerchantIdentifier { get; set; }
 
-        [JsonProperty("domainName")]
-        public string DomainName { get; set; }
-
         [JsonProperty("displayName")]
         public string DisplayName { get; set; }
+
+        [JsonProperty("initiative")]
+        public string Initiative { get; set; }
+
+        [JsonProperty("initiativeContext")]
+        public string InitiativeContext { get; set; }
     }
 }
