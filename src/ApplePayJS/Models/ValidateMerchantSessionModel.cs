@@ -9,6 +9,6 @@ namespace JustEat.ApplePayJS.Models
     {
         [DataType(DataType.Url)]
         [Required]
-        public string ValidationUrl { get; set; }
+        public string? ValidationUrl { get; set; }
     }
 }

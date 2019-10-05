@@ -31,7 +31,9 @@ export PATH="$DOTNET_INSTALL_DIR:$PATH"
 dotnet_version=$(dotnet --version)
 
 if [ "$dotnet_version" != "$CLI_VERSION" ]; then
+    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version "2.2.402" --install-dir "$DOTNET_INSTALL_DIR"
     curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version "$CLI_VERSION" --install-dir "$DOTNET_INSTALL_DIR"
 fi
 
 dotnet publish ./ApplePayJS.sln --output $artifacts/publish --configuration $configuration || exit 1
+dotnet test ./ApplePayJS.sln --output $artifacts --configuration $configuration || exit 1

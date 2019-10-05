@@ -58,6 +58,9 @@ else {
 Write-Host "Publishing solution..." -ForegroundColor Green
 & $dotnet publish $solutionFile --output $OutputPath --configuration $Configuration
 
+Write-Host "Running tests..." -ForegroundColor Green
+& $dotnet test $solutionFile --output $OutputPath --configuration $Configuration
+
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish failed with exit code $LASTEXITCODE"
 }

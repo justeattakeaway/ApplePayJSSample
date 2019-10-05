@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ApplePayJS\ApplePayJS.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="JustEat.HttpClientInterception" Version="2.0.2" />
+    <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.3.0" />
+    <PackageReference Include="Selenium.Support" Version="3.141.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="77.0.3865.4000" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="applepay-dev.pfx;testsettings.json;xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="localhost-dev.pfx" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebApplicationFactoryContentRootAttribute Include="ApplePayJS" AssemblyName="JustEat.ApplePayJS" ContentRootPath="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../src/ApplePayJS'))" ContentRootTest="ApplePayJS.csproj" Priority="-1" />
+  </ItemGroup>
+</Project>

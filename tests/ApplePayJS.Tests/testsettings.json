@@ -1,0 +1,17 @@
+{
+  "ApplePay": {
+    "DefaultLanguage": "en-GB",
+    "StoreName": "Test Store",
+    "UseCertificateStore": false,
+    "MerchantCertificateFileName": "applepay-dev.pfx",
+    "MerchantCertificatePassword": "Pa55w0rd!",
+    "UsePolyfill": true
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Warning",
+      "System": "Warning"
+    }
+  }
+}

@@ -4,6 +4,8 @@
 namespace JustEat.ApplePayJS.Controllers
 {
     using System;
+    using System.Net.Mime;
+    using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using JustEat.ApplePayJS.Clients;
@@ -11,7 +13,6 @@ namespace JustEat.ApplePayJS.Controllers
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Options;
     using Models;
-    using Newtonsoft.Json.Linq;
 
     public class HomeController : Controller
     {
@@ -42,7 +43,7 @@ namespace JustEat.ApplePayJS.Controllers
         }
 
         [HttpPost]
-        [Produces("application/json")]
+        [Produces(MediaTypeNames.Application.Json)]
         [Route("applepay/validate", Name = "MerchantValidation")]
         public async Task<IActionResult> Validate([FromBody] ValidateMerchantSessionModel model, CancellationToken cancellationToken = default)
         {
@@ -51,7 +52,7 @@ namespace JustEat.ApplePayJS.Controllers
             // these servers are available here: https://developer.apple.com/documentation/applepayjs/setting_up_server_requirements
             if (!ModelState.IsValid ||
                 string.IsNullOrWhiteSpace(model?.ValidationUrl) ||
-                !Uri.TryCreate(model.ValidationUrl, UriKind.Absolute, out Uri requestUri))
+                !Uri.TryCreate(model.ValidationUrl, UriKind.Absolute, out Uri? requestUri))
             {
                 return BadRequest();
             }
@@ -65,10 +66,10 @@ namespace JustEat.ApplePayJS.Controllers
                 MerchantIdentifier = _certificate.GetMerchantIdentifier(),
             };
 
-            JObject merchantSession = await _client.GetMerchantSessionAsync(requestUri, request, cancellationToken);
+            JsonDocument merchantSession = await _client.GetMerchantSessionAsync(requestUri, request, cancellationToken);
 
             // Return the merchant session as-is to the JavaScript as JSON.
-            return Json(merchantSession);
+            return Json(merchantSession.RootElement);
         }
 
         public IActionResult Error() => View();
