@@ -1,6 +1,5 @@
 sudo: required
 dist: xenial
-dotnet: 2.2
 language: csharp
 mono: none
 
