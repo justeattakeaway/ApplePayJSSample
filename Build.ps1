@@ -3,13 +3,19 @@ param(
     [Parameter(Mandatory = $false)][string] $OutputPath = ""
 )
 
+# These make CI builds faster
+$env:DOTNET_MULTILEVEL_LOOKUP = "0"
+$env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = "true"
+$env:NUGET_XMLDOC_MODE = "skip"
+
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
 
 $solutionPath = Split-Path $MyInvocation.MyCommand.Definition
 $solutionFile = Join-Path $solutionPath "ApplePayJS.sln"
 $sdkFile = Join-Path $solutionPath "global.json"
 
-$dotnetVersion = (Get-Content $sdkFile | ConvertFrom-Json).sdk.version
+$dotnetVersion = (Get-Content $sdkFile | Out-String | ConvertFrom-Json).sdk.version
 
 if ($OutputPath -eq "") {
     $OutputPath = Join-Path "$(Convert-Path "$PSScriptRoot")" "artifacts"
@@ -36,6 +42,7 @@ else {
 }
 
 if ($installDotNetSdk -eq $true) {
+
     $env:DOTNET_INSTALL_DIR = Join-Path "$(Convert-Path "$PSScriptRoot")" ".dotnetcli"
     $sdkPath = Join-Path $env:DOTNET_INSTALL_DIR "sdk\$dotnetVersion"
 
@@ -44,15 +51,19 @@ if ($installDotNetSdk -eq $true) {
             mkdir $env:DOTNET_INSTALL_DIR | Out-Null
         }
         $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
+        [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor "Tls12"
         Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
         & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
     }
-
-    $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
-    $dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet.exe"
 }
 else {
-    $dotnet = "dotnet.exe"
+    $env:DOTNET_INSTALL_DIR = Split-Path -Path (Get-Command dotnet.exe).Path
+}
+
+$dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet.exe"
+
+if (($installDotNetSdk -eq $true) -And ($null -eq $env:TF_BUILD)) {
+    $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
 }
 
 Write-Host "Publishing solution..." -ForegroundColor Green
