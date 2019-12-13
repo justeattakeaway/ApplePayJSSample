@@ -11,7 +11,7 @@
     <PackageTags>applepay</PackageTags>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>JustEat.ApplePayJS</RootNamespace>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>JustEat.ApplePayJS</UserSecretsId>
   </PropertyGroup>
