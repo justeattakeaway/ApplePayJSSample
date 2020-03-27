@@ -26,7 +26,7 @@ jobs:
         dotnet-version: 3.1.201
 
     - name: Install bower
-      run: npm install --global bower
+      run: npm install bower
 
     - name: Build, Test and Publish
       shell: pwsh
