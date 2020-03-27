@@ -23,7 +23,7 @@
   </PropertyGroup>
   <Target Name="InstallPackages" BeforeTargets="Build" Condition=" '$(InstallWebPackages)' == 'true' ">
     <Exec Command="npm ci" />
-    <Exec Command="bower install" />
+    <Exec Command="npm run install" />
   </Target>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm run build" />

@@ -5,11 +5,13 @@
   "devDependencies": {
     "@types/applepayjs": "3.0.0",
     "@types/jquery": "3.3.6",
+    "bower": "1.8.8",
     "tslint": "5.11.0",
     "typescript": "3.0.1"
   },
   "scripts": {
     "build": "tsc",
+    "install": "bower install",
     "lint": "tslint ./wwwroot/**/*.ts"
   }
 }
