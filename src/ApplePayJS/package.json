@@ -4,10 +4,10 @@
   "version": "3.1.0",
   "devDependencies": {
     "@types/applepayjs": "3.0.0",
-    "@types/jquery": "3.3.6",
+    "@types/jquery": "3.3.34",
     "bower": "1.8.8",
-    "tslint": "5.11.0",
-    "typescript": "3.0.1"
+    "tslint": "6.1.0",
+    "typescript": "3.8.3"
   },
   "scripts": {
     "build": "tsc",
