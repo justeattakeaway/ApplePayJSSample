@@ -23,12 +23,11 @@
   </PropertyGroup>
   <Target Name="InstallPackages" BeforeTargets="Build" Condition=" '$(InstallWebPackages)' == 'true' ">
     <Exec Command="npm ci" />
-    <Exec Command="bower install" />
+    <Exec Command="npm run install" />
   </Target>
   <Target Name="PrepublishScript" BeforeTargets="PrepareForPublish">
     <Exec Command="npm run build" />
     <Exec Command="npm run lint" />
-    <Exec Command="dotnet bundle" />
   </Target>
   <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
@@ -36,7 +35,4 @@
       <Content Include="wwwroot/.well-known/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes)" />
     </ItemGroup>
   </Target>
-  <ItemGroup>
-    <DotNetCliToolReference Include="BundlerMinifier.Core" Version="3.0.415" />
-  </ItemGroup>
 </Project>

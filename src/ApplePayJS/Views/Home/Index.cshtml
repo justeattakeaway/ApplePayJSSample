@@ -184,20 +184,10 @@
     }
     @if (string.Equals(Config["ApplePay:UseTypeScript"], bool.TrueString, StringComparison.OrdinalIgnoreCase))
     {
-        <environment names="Development">
-            <script src="~/ts/site.js" asp-append-version="true"></script>
-        </environment>
-        <environment names="Staging,Production">
-            <script src="~/ts/site.min.js" asp-append-version="true"></script>
-        </environment>
+        <script src="~/ts/site.js" asp-append-version="true"></script>
     }
     else
     {
-        <environment names="Development">
-            <script src="~/js/site.js" asp-append-version="true"></script>
-        </environment>
-        <environment names="Staging,Production">
-            <script src="~/js/site.min.js" asp-append-version="true"></script>
-        </environment>
+        <script src="~/js/site.js" asp-append-version="true"></script>
     }
 }

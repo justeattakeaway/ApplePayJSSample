@@ -9,10 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		.travis.yml = .travis.yml
-		appveyor.yml = appveyor.yml
-		Build.ps1 = Build.ps1
-		build.sh = build.sh
+		build.ps1 = build.ps1
 		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json
@@ -38,7 +35,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".vscode", ".vscode", "{F99C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3F1B1211-EEF9-482B-93CD-6FF250907EB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplePayJS.Tests", "tests\ApplePayJS.Tests\ApplePayJS.Tests.csproj", "{20EE5C1E-2059-4291-93F6-AA0F76C08EBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplePayJS.Tests", "tests\ApplePayJS.Tests\ApplePayJS.Tests.csproj", "{20EE5C1E-2059-4291-93F6-AA0F76C08EBE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{40A911CC-197D-47A5-9ACB-013A72D3D245}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,7 @@ Global
 		{A4EFB4F4-BC05-4A67-89AC-4D7D21B71D4E} = {C697BCC9-C4F9-4AD8-8336-E90A239865DE}
 		{F99C01C5-8B5D-4BDD-B40B-35DE14D08D57} = {C697BCC9-C4F9-4AD8-8336-E90A239865DE}
 		{20EE5C1E-2059-4291-93F6-AA0F76C08EBE} = {3F1B1211-EEF9-482B-93CD-6FF250907EB9}
+		{40A911CC-197D-47A5-9ACB-013A72D3D245} = {A4EFB4F4-BC05-4A67-89AC-4D7D21B71D4E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8797D09A-407D-424A-A8F0-22FB26F0650C}
