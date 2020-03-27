@@ -1,0 +1,36 @@
+name: build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.201
+
+    - name: Install bower
+      run: npm install --global bower
+
+    - name: Build, Test and Publish
+      shell: pwsh
+      run: ./build.ps1
+      env:
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+        NUGET_XMLDOC_MODE: skip

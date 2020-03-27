@@ -1,3 +1,4 @@
+#! /usr/bin/pwsh
 param(
     [Parameter(Mandatory = $false)][string] $Configuration = "Release",
     [Parameter(Mandatory = $false)][string] $OutputPath = ""
@@ -23,7 +24,7 @@ if ($OutputPath -eq "") {
 
 $installDotNetSdk = $false;
 
-if (($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue))) {
+if (($null -eq (Get-Command "dotnet" -ErrorAction SilentlyContinue)) -and ($null -eq (Get-Command "dotnet.exe" -ErrorAction SilentlyContinue))) {
     Write-Host "The .NET Core SDK is not installed."
     $installDotNetSdk = $true
 }
@@ -53,15 +54,14 @@ if ($installDotNetSdk -eq $true) {
         $installScript = Join-Path $env:DOTNET_INSTALL_DIR "install.ps1"
         [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor "Tls12"
         Invoke-WebRequest "https://dot.net/v1/dotnet-install.ps1" -OutFile $installScript -UseBasicParsing
-        & $installScript -Version "2.2.207" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
         & $installScript -Version "$dotnetVersion" -InstallDir "$env:DOTNET_INSTALL_DIR" -NoPath
     }
 }
 else {
-    $env:DOTNET_INSTALL_DIR = Split-Path -Path (Get-Command dotnet.exe).Path
+    $env:DOTNET_INSTALL_DIR = Split-Path -Path (Get-Command dotnet).Path
 }
 
-$dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet.exe"
+$dotnet = Join-Path "$env:DOTNET_INSTALL_DIR" "dotnet"
 
 if (($installDotNetSdk -eq $true) -And ($null -eq $env:TF_BUILD)) {
     $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
