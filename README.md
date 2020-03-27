@@ -12,10 +12,10 @@ This example integration shows a minimal sample of how to integrate Apple Pay in
 
 The key components to look at for the implementation are:
 
-  * ```src\ApplePayJS\Views\Home\Index.cshtml``` - The view that renders the Apple Pay button.
-  * ```src\ApplePayJS\wwwroot\css\site.css``` - The CSS used to style the Apple Pay button.
-  * ```src\ApplePayJS\wwwroot\js\site.js``` - The JavaScript that performs the majority of the Apple Pay functionality.
-  * ```src\ApplePayJS\Controllers\HomeController.cs``` - The controller that performs the POST to the Apple Pay service to verify a merchant session.
+* ```src\ApplePayJS\Views\Home\Index.cshtml``` - The view that renders the Apple Pay button.
+* ```src\ApplePayJS\wwwroot\css\site.css``` - The CSS used to style the Apple Pay button.
+* ```src\ApplePayJS\wwwroot\js\site.js``` - The JavaScript that performs the majority of the Apple Pay functionality.
+* ```src\ApplePayJS\Controllers\HomeController.cs``` - The controller that performs the POST to the Apple Pay service to verify a merchant session.
 
 ## Setup
 
@@ -49,13 +49,13 @@ You should be able to debug the application in [Visual Studio Code](https://code
 
 If you are deploying the sample application to a Microsoft Azure App Service Web App, you will need to make the following configuration changes to your Web App for the sample application to run correctly:
 
-  * Navigate to the _SSL certificates_ tab of your Web App and upload your Apple Merchant certificate as a ```.pfx``` file, making a note of the _THUMBPRINT_ value.
-  * Navigate to the _Application settings_ tab of your Web App and add the following settings:
-    * **WEBSITE_LOAD_CERTIFICATES** to the value of _THUMBPRINT_ you noted above.
-    * **ApplePay:MerchantCertificateThumbprint** to the value of _THUMBPRINT_ you noted above.
-    * **ApplePay:UseCertificateStore** to the value of _true_.
-    * Save the changes.
-  * Ensure the hostname you are using (either ```{yourappname}.azurewebsites.net``` or a custom hostname that you have set up) has been added in the Apple Developer portal to your merchant Id and you've added the Apple Pay domain validation file as described in the _Setup_ section above.
+* Navigate to the _SSL certificates_ tab of your Web App and upload your Apple Merchant certificate as a ```.pfx``` file, making a note of the _THUMBPRINT_ value.
+* Navigate to the _Application settings_ tab of your Web App and add the following settings:
+  * **WEBSITE_LOAD_CERTIFICATES** to the value of _THUMBPRINT_ you noted above.
+  * **ApplePay:MerchantCertificateThumbprint** to the value of _THUMBPRINT_ you noted above.
+  * **ApplePay:UseCertificateStore** to the value of _true_.
+  * Save the changes.
+* Ensure the hostname you are using (either ```{yourappname}.azurewebsites.net``` or a custom hostname that you have set up) has been added in the Apple Developer portal to your merchant Id and you've added the Apple Pay domain validation file as described in the _Setup_ section above.
 
 ## Feedback
 
@@ -67,5 +67,5 @@ This project is licensed under the [Apache 2.0](https://github.com/justeat/Apple
 
 ## External Links
 
-  * [Apple Pay JS](https://developer.apple.com/reference/applepayjs)
-  * [Apple Developer Portal](https://developer.apple.com/account/)
+* [Apple Pay JS](https://developer.apple.com/reference/applepayjs)
+* [Apple Developer Portal](https://developer.apple.com/account/)
