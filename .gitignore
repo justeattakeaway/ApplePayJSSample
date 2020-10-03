@@ -12,9 +12,11 @@ Backup*/
 bin
 Bin
 BuildOutput
+dotnet-tools.json
 node_modules
 obj
 packages
+profile.arm.json
 project.lock.json
 PublishProfiles
 src/ApplePayJS/*.pfx
