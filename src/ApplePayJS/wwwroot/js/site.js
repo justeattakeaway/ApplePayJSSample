@@ -68,7 +68,7 @@ justEat = {
             // };
 
             // Create the Apple Pay session.
-            var session = new ApplePaySession(6, paymentRequest);
+            var session = new ApplePaySession(10, paymentRequest);
 
             // Setup handler for validation the merchant session.
             session.onvalidatemerchant = function (event) {
