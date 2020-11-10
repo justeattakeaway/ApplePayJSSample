@@ -127,7 +127,7 @@ namespace ApplePayJS.Tests
             _host = builder.Build();
 
             // Force creation of the Kestrel server and start it
-            var hostedService = _host.Services.GetService<IHostedService>();
+            var hostedService = _host.Services.GetRequiredService<IHostedService>();
             await hostedService.StartAsync(default);
         }
 

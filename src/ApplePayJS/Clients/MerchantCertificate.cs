@@ -63,7 +63,7 @@ namespace JustEat.ApplePayJS.Clients
             try
             {
                 return new X509Certificate2(
-                    _options.MerchantCertificateFileName,
+                    _options.MerchantCertificateFileName ?? string.Empty,
                     _options.MerchantCertificatePassword);
             }
             catch (Exception ex)
@@ -84,7 +84,7 @@ namespace JustEat.ApplePayJS.Clients
 
             var certificates = store.Certificates.Find(
                 X509FindType.FindByThumbprint,
-                _options.MerchantCertificateThumbprint?.Trim(),
+                _options.MerchantCertificateThumbprint?.Trim() ?? string.Empty,
                 validOnly: false);
 
             if (certificates.Count < 1)
