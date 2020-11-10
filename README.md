@@ -2,7 +2,7 @@
 
 [![Build status](https://github.com/justeat/ApplePayJSSample/workflows/build/badge.svg?branch=master&event=push)](https://github.com/justeat/ApplePayJSSample/actions?query=workflow%3Abuild+branch%3Amaster+event%3Apush)
 
-This repository contains a sample implementation of [Apple Pay JS](https://developer.apple.com/reference/applepayjs/) using ASP.NET Core 3.1 written in C# and JavaScript.
+This repository contains a sample implementation of [Apple Pay JS](https://developer.apple.com/reference/applepayjs/) using ASP.NET 5.0 written in C# and JavaScript.
 
 ## Overview
 
@@ -21,7 +21,7 @@ The key components to look at for the implementation are:
 
 To setup the repository to run the sample, perform the steps below:
 
-  1. Install the latest [.NET Core 3.1 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2019 or Visual Studio Code.
+  1. Install the latest [.NET 5.0 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2019 or Visual Studio Code.
   1. Fork this repository.
   1. Clone the repository from your fork to your local machine: ```git clone https://github.com/{username}/ApplePayJSSample.git```
   1. Restore the Bower, npm and NuGet packages.
