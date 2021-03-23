@@ -31,11 +31,11 @@ To setup the repository to run the sample, perform the steps below:
   1. Either add your ```.pfx``` file to the root of the application in ```src\ApplePayJS``` (but **not** in the ```wwwroot``` folder) or install it into the local certificate store.
   1. Update the Apple touch icon (```src\ApplePayJS\wwwroot\apple-touch-icon.png```) and favicon (```src\ApplePayJS\wwwroot\favicon.ico```) to your own designs.
   1. Configure the following settings as appropriate in either your environment variables or in ```src\ApplePayJS\appsettings.json```:
-    * ```ApplePay:StoreName```
-    * ```ApplePay:UseCertificateStore```
-    * ```ApplePay:MerchantCertificateThumbprint``` or ```ApplePay:MerchantCertificateFileName```
+      * ```ApplePay:StoreName```
+      * ```ApplePay:UseCertificateStore```
+      * ```ApplePay:MerchantCertificateThumbprint``` or ```ApplePay:MerchantCertificateFileName```
   1. Configure the following setting in either your environment variables, your [user secrets](https://docs.asp.net/en/latest/security/app-secrets.html#secret-manager) or in ```src\ApplePayJS\appsettings.json``` (**not recommended**) if loading the ```.pfx``` file from disk (i.e. ```ApplePay:UseCertificateStore=false```):
-    * ```ApplePay:MerchantCertificatePassword```
+      * ```ApplePay:MerchantCertificatePassword```
   1. Deploy the application to the hosting environment for the domain where you wish to use Apple Pay JS.
   1. Verify the domain in the [Apple Developer Portal](https://developer.apple.com/account/).
 
