@@ -9,6 +9,8 @@ namespace JustEat.ApplePayJS.Models
 
         public bool UseCertificateStore { get; set; }
 
+        public string? MerchantCertificate { get; set; }
+
         public string? MerchantCertificateFileName { get; set; }
 
         public string? MerchantCertificatePassword { get; set; }
