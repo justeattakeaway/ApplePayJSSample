@@ -12,9 +12,7 @@
     <PackageReference Include="MartinCostello.Logging.XUnit" Version="0.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.7" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
-    <PackageReference Include="Selenium.Support" Version="3.141.0" />
-    <PackageReference Include="Selenium.WebDriver" Version="3.141.0" />
-    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="91.0.4472.10100" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.12.2" />
     <PackageReference Include="Shouldly" Version="4.0.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
@@ -26,4 +24,18 @@
   <ItemGroup>
     <WebApplicationFactoryContentRootAttribute Include="ApplePayJS" AssemblyName="JustEat.ApplePayJS" ContentRootPath="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)../../src/ApplePayJS'))" ContentRootTest="ApplePayJS.csproj" Priority="-1" />
   </ItemGroup>
+  <PropertyGroup>
+    <_PlaywrightCLIInstalledCommand Condition=" $([MSBuild]::IsOsPlatform('Windows')) ">where playwright</_PlaywrightCLIInstalledCommand>
+    <_PlaywrightCLIInstalledCommand Condition=" !$([MSBuild]::IsOsPlatform('Windows')) ">type playwright</_PlaywrightCLIInstalledCommand>
+  </PropertyGroup>
+  <Target Name="DownloadBrowserDrivers" AfterTargets="Build">
+    <Exec Command="$(_PlaywrightCLIInstalledCommand)" ConsoleToMsBuild="true" IgnoreExitCode="true" StandardErrorImportance="Normal" StandardOutputImportance="Normal">
+      <Output TaskParameter="ExitCode" PropertyName="_PlaywrightCLIInstalled" />
+    </Exec>
+    <Warning Condition=" $(_PlaywrightCLIInstalled) != 0 AND '$(GITHUB_ACTIONS)' == '' " Text="The Playwright CLI .NET Global Tool is not installed. To install this tool, run the following command: dotnet tool install --global Microsoft.Playwright.CLI" />
+    <Exec Condition=" $(_PlaywrightCLIInstalled) != 0 AND '$(GITHUB_ACTIONS)' != '' " Command="dotnet tool install --global Microsoft.Playwright.CLI" ConsoleToMsBuild="true" StandardOutputImportance="Normal">
+      <Output TaskParameter="ExitCode" PropertyName="_PlaywrightCLIInstalled" />
+    </Exec>
+    <Exec Condition=" $(_PlaywrightCLIInstalled) == 0 " Command="playwright install" WorkingDirectory="$(MSBuildThisFileDirectory)../../" ConsoleToMsBuild="true" StandardOutputImportance="Normal" />
+  </Target>
 </Project>

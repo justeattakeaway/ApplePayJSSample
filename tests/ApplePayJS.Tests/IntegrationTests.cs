@@ -1,13 +1,9 @@
 // Copyright (c) Just Eat, 2016. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System;
-using System.IO;
 using System.Threading.Tasks;
 using JustEat.HttpClientInterception;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Support.UI;
+using Microsoft.Playwright;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -42,7 +38,7 @@ namespace ApplePayJS.Tests
         }
 
         [Fact]
-        public void Can_Pay_With_Apple_Pay()
+        public async Task Can_Pay_With_Apple_Pay()
         {
             // Arrange
             var builder = new HttpRequestInterceptionBuilder()
@@ -53,38 +49,44 @@ namespace ApplePayJS.Tests
                 .WithJsonContent(new { })
                 .RegisterWith(Fixture.Interceptor);
 
-            using var driver = CreateWebDriver();
-            driver.Navigate().GoToUrl(Fixture.ServerAddress);
+            var fixture = new BrowserFixture(Fixture.OutputHelper);
 
-            // Act
-            driver.FindElement(By.Id("amount")).Clear();
-            driver.FindElement(By.Id("amount")).SendKeys("1.23");
-            driver.FindElement(By.Id("apple-pay-button")).Click();
+            await fixture.WithPageAsync(async (page) =>
+            {
+                await page.GotoAsync(Fixture.ServerAddress.ToString());
+                await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-            // Assert
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-            wait.Until((p) => p.FindElement(By.ClassName("card-name")).Displayed);
+                // Act
+                await page.ClearTextAsync(Selectors.Amount);
+                await page.TypeAsync(Selectors.Amount, "1.23");
 
-            driver.FindElement(By.ClassName("card-name")).Text.ShouldBe("American Express");
-            driver.FindElement(By.Id("billing-contact")).FindElement(By.ClassName("contact-name")).Text.ShouldBe("John Smith");
-            driver.FindElement(By.Id("shipping-contact")).FindElement(By.ClassName("contact-name")).Text.ShouldBe("John Smith");
+                await page.ClickAsync(Selectors.Pay);
+
+                // Assert
+                await page.WaitForSelectorAsync(Selectors.CardName);
+                await page.InnerTextAsync(Selectors.CardName).ShouldBe("American Express");
+
+                foreach (string selector in new[] { Selectors.BillingContact, Selectors.ShipingContact })
+                {
+                    var contact = await page.QuerySelectorAsync(selector);
+                    contact.ShouldNotBeNull();
+
+                    var contactName = await contact.QuerySelectorAsync(Selectors.ContactName);
+                    contactName.ShouldNotBeNull();
+
+                    await contactName.InnerTextAsync().ShouldContain("John Smith");
+                }
+            });
         }
 
-        private static IWebDriver CreateWebDriver()
+        private static class Selectors
         {
-            string chromeDriverDirectory = Path.GetDirectoryName(typeof(IntegrationTests).Assembly.Location) ?? ".";
-
-            var options = new ChromeOptions()
-            {
-                AcceptInsecureCertificates = true,
-            };
-
-            if (!System.Diagnostics.Debugger.IsAttached)
-            {
-                options.AddArgument("--headless");
-            }
-
-            return new ChromeDriver(chromeDriverDirectory, options);
+            internal const string Amount = "id=amount";
+            internal const string BillingContact = "id=billing-contact";
+            internal const string CardName = ".card-name";
+            internal const string ContactName = ".contact-name";
+            internal const string Pay = "id=apple-pay-button";
+            internal const string ShipingContact = "id=shipping-contact";
         }
     }
 }
