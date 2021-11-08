@@ -2,6 +2,7 @@
   <PropertyGroup>
     <Authors>Martin Costello</Authors>
     <Company>Just Eat</Company>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Copyright>Just Eat (c) 2016-$([System.DateTime]::Now.ToString(yyyy))</Copyright>
     <LangVersion>latest</LangVersion>
     <NeutralLanguage>en-US</NeutralLanguage>

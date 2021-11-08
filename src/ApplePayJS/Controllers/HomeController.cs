@@ -3,13 +3,9 @@
 
 namespace JustEat.ApplePayJS.Controllers;
 
-using System;
 using System.Net.Mime;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using JustEat.ApplePayJS.Clients;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Models;

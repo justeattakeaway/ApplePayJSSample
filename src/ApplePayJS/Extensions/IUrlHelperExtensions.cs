@@ -3,7 +3,6 @@
 
 namespace JustEat.ApplePayJS.Extensions;
 
-using System;
 using Microsoft.AspNetCore.Mvc;
 
 /// <summary>
