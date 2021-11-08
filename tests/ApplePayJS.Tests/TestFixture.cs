@@ -3,10 +3,8 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using JustEat.ApplePayJS;
@@ -57,8 +55,7 @@ namespace ApplePayJS.Tests
                     (_) => new HttpRequestInterceptionFilter(Interceptor)));
 
             builder.ConfigureAppConfiguration(ConfigureTests)
-                   .ConfigureLogging((loggingBuilder) => loggingBuilder.ClearProviders().AddXUnit(this).AddDebug())
-                   .UseContentRoot(GetContentRootPath());
+                   .ConfigureLogging((loggingBuilder) => loggingBuilder.ClearProviders().AddXUnit(this).AddDebug());
 
             builder.ConfigureKestrel(
                 (kestrelOptions) => kestrelOptions.ConfigureHttpsDefaults(
@@ -96,7 +93,7 @@ namespace ApplePayJS.Tests
 
             return new UriBuilder()
             {
-                Scheme = "https",
+                Scheme = Uri.UriSchemeHttps,
                 Host = "localhost",
                 Port = port,
             }.Uri;
@@ -122,24 +119,13 @@ namespace ApplePayJS.Tests
             // Configure the server address for the server to listen on for HTTP requests
             ClientOptions.BaseAddress = FindFreeServerAddress();
 
-            var builder = CreateHostBuilder().ConfigureWebHost(ConfigureWebHost);
+            var builder = CreateHostBuilder()!.ConfigureWebHost(ConfigureWebHost);
 
             _host = builder.Build();
 
             // Force creation of the Kestrel server and start it
             var hostedService = _host.Services.GetRequiredService<IHostedService>();
             await hostedService.StartAsync(default);
-        }
-
-        private string GetContentRootPath()
-        {
-            var attribute = GetTestAssemblies()
-                .SelectMany((p) => p.GetCustomAttributes<WebApplicationFactoryContentRootAttribute>())
-                .Where((p) => string.Equals(p.Key, "JustEat.ApplePayJS", StringComparison.OrdinalIgnoreCase))
-                .OrderBy((p) => p.Priority)
-                .First();
-
-            return attribute.ContentRootPath;
         }
 
         private sealed class HttpRequestInterceptionFilter : IHttpMessageHandlerBuilderFilter
