@@ -21,19 +21,14 @@ public class IntegrationTests : IAsyncLifetime
 
     private TestFixture Fixture { get; }
 
-    public async Task InitializeAsync()
-    {
-        await Fixture.StartServerAsync();
-    }
+    public Task InitializeAsync() => Task.CompletedTask;
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
         if (Fixture != null)
         {
-            Fixture.Dispose();
+            await Fixture.DisposeAsync();
         }
-
-        return Task.CompletedTask;
     }
 
     [Fact]
