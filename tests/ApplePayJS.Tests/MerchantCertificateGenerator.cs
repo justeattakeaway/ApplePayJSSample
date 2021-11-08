@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Runtime.Versioning;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace ApplePayJS.Tests
     public static class MerchantCertificateGenerator
     {
         [Fact(Skip = "Enable this test to generate a new dummy Apple Pay merchant certificate to use for the tests.")]
+        [SupportedOSPlatform("windows")]
         public static async Task Generate_Fake_Apple_Pay_Merchant_Certificate()
         {
             // Arrange

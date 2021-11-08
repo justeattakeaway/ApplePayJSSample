@@ -47,8 +47,7 @@ namespace JustEat.ApplePayJS
                         options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                         options.Filters.Add(new RequireHttpsAttribute());
                     }
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                });
 
             // Register class for managing the application's use of the Apple Pay merchant certificate
             services.AddSingleton<MerchantCertificate>();
