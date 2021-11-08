@@ -1,12 +1,9 @@
 // Copyright (c) Just Eat, 2016. All rights reserved.
 // Licensed under the Apache 2.0 license. See the LICENSE file in the project root for full license information.
 
-using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
 using JustEat.ApplePayJS;
 using JustEat.HttpClientInterception;
 using MartinCostello.Logging.XUnit;
