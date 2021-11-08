@@ -3,20 +3,19 @@
 
 using System.Text.Json.Serialization;
 
-namespace JustEat.ApplePayJS.Clients
+namespace JustEat.ApplePayJS.Clients;
+
+public class MerchantSessionRequest
 {
-    public class MerchantSessionRequest
-    {
-        [JsonPropertyName("merchantIdentifier")]
-        public string? MerchantIdentifier { get; set; }
+    [JsonPropertyName("merchantIdentifier")]
+    public string? MerchantIdentifier { get; set; }
 
-        [JsonPropertyName("displayName")]
-        public string? DisplayName { get; set; }
+    [JsonPropertyName("displayName")]
+    public string? DisplayName { get; set; }
 
-        [JsonPropertyName("initiative")]
-        public string? Initiative { get; set; }
+    [JsonPropertyName("initiative")]
+    public string? Initiative { get; set; }
 
-        [JsonPropertyName("initiativeContext")]
-        public string? InitiativeContext { get; set; }
-    }
+    [JsonPropertyName("initiativeContext")]
+    public string? InitiativeContext { get; set; }
 }

@@ -4,20 +4,19 @@
 using System.Threading.Tasks;
 using Shouldly;
 
-namespace ApplePayJS.Tests
-{
-    internal static class TaskExtensions
-    {
-        public static async Task ShouldBe(this Task<string> task, string expected)
-        {
-            string actual = await task;
-            actual.ShouldBe(expected);
-        }
+namespace ApplePayJS.Tests;
 
-        public static async Task ShouldContain(this Task<string> task, string expected)
-        {
-            string actual = await task;
-            actual.ShouldContain(expected);
-        }
+internal static class TaskExtensions
+{
+    public static async Task ShouldBe(this Task<string> task, string expected)
+    {
+        string actual = await task;
+        actual.ShouldBe(expected);
+    }
+
+    public static async Task ShouldContain(this Task<string> task, string expected)
+    {
+        string actual = await task;
+        actual.ShouldContain(expected);
     }
 }

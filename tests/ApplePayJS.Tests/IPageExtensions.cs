@@ -5,15 +5,14 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright;
 
-namespace ApplePayJS.Tests
+namespace ApplePayJS.Tests;
+
+internal static class IPageExtensions
 {
-    internal static class IPageExtensions
+    public static async Task ClearTextAsync(this IPage page, string selector)
     {
-        public static async Task ClearTextAsync(this IPage page, string selector)
-        {
-            await page.FocusAsync(selector);
-            await page.Keyboard.PressAsync(OperatingSystem.IsMacOS() ? "Meta+A" : "Control+A");
-            await page.Keyboard.PressAsync("Delete");
-        }
+        await page.FocusAsync(selector);
+        await page.Keyboard.PressAsync(OperatingSystem.IsMacOS() ? "Meta+A" : "Control+A");
+        await page.Keyboard.PressAsync("Delete");
     }
 }
