@@ -30,7 +30,7 @@ jobs:
     - name: Install Playwright CLI
       shell: pwsh
       run: |
-        dotnet tool install --global Microsoft.Playwright.CLI
+        dotnet tool install --global Microsoft.Playwright.CLI --version 1.2.0
 
     - name: Build, Test and Publish
       shell: pwsh
