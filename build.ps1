@@ -70,8 +70,15 @@ if (($installDotNetSdk -eq $true) -And ($null -eq $env:TF_BUILD)) {
 Write-Host "Publishing solution..." -ForegroundColor Green
 & $dotnet publish $solutionFile --output $OutputPath --configuration $Configuration
 
+$additionalArgs = @()
+
+if (![string]::IsNullOrEmpty($env:GITHUB_SHA)) {
+    $additionalArgs += "--logger"
+    $additionalArgs += "GitHubActions;report-warnings=false"
+}
+
 Write-Host "Running tests..." -ForegroundColor Green
-& $dotnet test $solutionFile --output $OutputPath --configuration $Configuration
+& $dotnet test $solutionFile --output $OutputPath --configuration $Configuration $additionalArgs
 
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish failed with exit code $LASTEXITCODE"
