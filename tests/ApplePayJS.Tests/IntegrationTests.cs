@@ -21,7 +21,11 @@ public class IntegrationTests : IAsyncLifetime
 
     private TestFixture Fixture { get; }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public Task InitializeAsync()
+    {
+        InstallPlaywright();
+        return Task.CompletedTask;
+    }
 
     public async Task DisposeAsync()
     {
@@ -71,6 +75,16 @@ public class IntegrationTests : IAsyncLifetime
                 await contactName.InnerTextAsync().ShouldContain("John Smith");
             }
         });
+    }
+
+    private static void InstallPlaywright()
+    {
+        int exitCode = Program.Main(new[] { "install" });
+
+        if (exitCode != 0)
+        {
+            throw new InvalidOperationException($"Playwright exited with code {exitCode}");
+        }
     }
 
     private static class Selectors
