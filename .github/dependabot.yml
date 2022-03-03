@@ -1,5 +1,11 @@
 version: 2
 updates:
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "05:30"
+    timezone: Europe/London
 - package-ecosystem: nuget
   directory: "/"
   schedule:
