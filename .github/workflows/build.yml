@@ -34,7 +34,7 @@ jobs:
         NUGET_XMLDOC_MODE: skip
 
     - name: Publish screenshots
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: screenshots
@@ -42,7 +42,7 @@ jobs:
         if-no-files-found: ignore
 
     - name: Publish videos
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
         name: videos
