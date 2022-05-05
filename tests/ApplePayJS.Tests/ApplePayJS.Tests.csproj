@@ -16,7 +16,7 @@
     <PackageReference Include="Microsoft.Playwright" Version="1.21.0" />
     <PackageReference Include="Shouldly" Version="4.0.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.4" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="applepay-dev.pfx;testsettings.json;xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
