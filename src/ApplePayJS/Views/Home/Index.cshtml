@@ -11,7 +11,7 @@
     ViewData["Title"] = "Sample integration";
     var token = Antiforgery.GetAndStoreTokens(Context);
 
-    var language = Context.Request.Query["lang"].FirstOrDefault() ?? Config["ApplePay:DefaultLanguage"];
+    var language = Context.Request.Query["lang"].FirstOrDefault() ?? Config["ApplePay:DefaultLanguage"] ?? string.Empty;
     var region = new System.Globalization.RegionInfo(language);
 
     var countryCode = region.TwoLetterISORegionName;

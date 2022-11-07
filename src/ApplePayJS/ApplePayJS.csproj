@@ -11,7 +11,7 @@
     <PackageTags>applepay</PackageTags>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <RootNamespace>JustEat.ApplePayJS</RootNamespace>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <TypeScriptToolsVersion>latest</TypeScriptToolsVersion>
     <UserSecretsId>JustEat.ApplePayJS</UserSecretsId>
   </PropertyGroup>
@@ -32,7 +32,6 @@
   <Target Name="AddGeneratedContentItems" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
       <Content Include="wwwroot/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);@(Content)" />
-      <Content Include="wwwroot/.well-known/**" CopyToPublishDirectory="PreserveNewest" Exclude="$(DefaultItemExcludes)" />
     </ItemGroup>
   </Target>
 </Project>
