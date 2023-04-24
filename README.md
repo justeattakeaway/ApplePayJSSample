@@ -1,6 +1,6 @@
 # Apple Pay JS Example Integration
 
-[![Build status](https://github.com/justeat/ApplePayJSSample/workflows/build/badge.svg?branch=main&event=push)](https://github.com/justeat/ApplePayJSSample/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
+[![Build status](https://github.com/justeattakeaway/ApplePayJSSample/workflows/build/badge.svg?branch=main&event=push)](https://github.com/justeattakeaway/ApplePayJSSample/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
 
 This repository contains a sample implementation of [Apple Pay JS](https://developer.apple.com/reference/applepayjs/) using ASP.NET Core 6 written in C# and JavaScript.
 
@@ -43,7 +43,7 @@ You should now be able to perform Apple Pay JS transactions on the deployed appl
 
 ## Local Debugging
 
-You should be able to debug the application in [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio 2019](https://www.visualstudio.com/downloads/).
+You should be able to debug the application in [Visual Studio Code](https://code.visualstudio.com/) or [Visual Studio 2022](https://www.visualstudio.com/downloads/).
 
 ## Azure App Service Deployment
 
@@ -59,11 +59,11 @@ If you are deploying the sample application to a Microsoft Azure App Service Web
 
 ## Feedback
 
-Any feedback or issues can be added to the [issues](https://github.com/justeat/ApplePayJSSample/issues) for this project in GitHub.
+Any feedback or issues can be added to the [issues](https://github.com/justeattakeaway/ApplePayJSSample/issues) for this project in GitHub.
 
 ## License
 
-This project is licensed under the [Apache 2.0](https://github.com/justeat/ApplePayJSSample/blob/main/LICENSE) license.
+This project is licensed under the [Apache 2.0](https://github.com/justeattakeaway/ApplePayJSSample/blob/main/LICENSE) license.
 
 ## External Links
 
