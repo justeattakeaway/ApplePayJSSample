@@ -5,7 +5,7 @@
     <OutputType>Exe</OutputType>
     <PackageId>JustEat.ApplePayJS</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/justeat/ApplePayJSSample</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/justeattakeaway/ApplePayJSSample</PackageProjectUrl>
     <PackageReleaseNotes>$(PackageProjectUrl)/releases</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>applepay</PackageTags>
