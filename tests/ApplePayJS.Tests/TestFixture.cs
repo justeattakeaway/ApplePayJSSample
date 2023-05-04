@@ -53,6 +53,11 @@ public class TestFixture : WebApplicationFactory<Program>, ITestOutputHelperAcce
         }
     }
 
+    protected override void ConfigureClient(HttpClient client)
+    {
+        client.BaseAddress = ServerAddress;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(
