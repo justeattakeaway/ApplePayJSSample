@@ -24,6 +24,11 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@607fce577a46308457984d59e4954e075820f10a # v3.0.3
 
+    - name: Setup Node
+      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+      with:
+        node-version: '18'
+
     - name: Build, Test and Publish
       shell: pwsh
       run: ./build.ps1
