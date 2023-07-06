@@ -33,6 +33,7 @@ jobs:
           contains(steps.dependabot-metadata.outputs.dependency-names, 'actions/checkout') ||
           contains(steps.dependabot-metadata.outputs.dependency-names, 'actions/dependency-review-action') ||
           contains(steps.dependabot-metadata.outputs.dependency-names, 'actions/setup-dotnet') ||
+          contains(steps.dependabot-metadata.outputs.dependency-names, 'actions/setup-node') ||
           contains(steps.dependabot-metadata.outputs.dependency-names, 'actions/upload-artifact') ||
           contains(steps.dependabot-metadata.outputs.dependency-names, 'dependabot/fetch-metadata') ||
           contains(steps.dependabot-metadata.outputs.dependency-names, 'github/codeql-action') ||
