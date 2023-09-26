@@ -54,14 +54,14 @@ public class IntegrationTests : IAsyncLifetime
             await page.GotoAsync(Fixture.ServerAddress.ToString());
             await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-                // Act
-                await page.ClearTextAsync(Selectors.Amount);
-            await page.TypeAsync(Selectors.Amount, "1.23");
+            // Act
+            await page.ClearTextAsync(Selectors.Amount);
+            await page.FillAsync(Selectors.Amount, "1.23");
 
             await page.ClickAsync(Selectors.Pay);
 
-                // Assert
-                await page.WaitForSelectorAsync(Selectors.CardName);
+            // Assert
+            await page.WaitForSelectorAsync(Selectors.CardName);
             await page.InnerTextAsync(Selectors.CardName).ShouldBe("American Express");
 
             foreach (string selector in new[] { Selectors.BillingContact, Selectors.ShipingContact })
