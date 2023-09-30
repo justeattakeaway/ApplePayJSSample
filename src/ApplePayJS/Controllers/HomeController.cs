@@ -10,29 +10,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Models;
 
-public class HomeController : Controller
+public class HomeController(
+    ApplePayClient client,
+    MerchantCertificate certificate,
+    IOptions<ApplePayOptions> options) : Controller
 {
-    private readonly ApplePayClient _client;
-    private readonly MerchantCertificate _certificate;
-    private readonly ApplePayOptions _options;
-
-    public HomeController(
-        ApplePayClient client,
-        MerchantCertificate certificate,
-        IOptions<ApplePayOptions> options)
-    {
-        _client = client;
-        _certificate = certificate;
-        _options = options.Value;
-    }
-
     public IActionResult Index()
     {
         // Get the merchant identifier and store name for use in the JavaScript by ApplePaySession.
         var model = new HomeModel()
         {
-            MerchantId = _certificate.GetMerchantIdentifier(),
-            StoreName = _options.StoreName,
+            MerchantId = certificate.GetMerchantIdentifier(),
+            StoreName = options.Value.StoreName,
         };
 
         return View(model);
@@ -56,13 +45,13 @@ public class HomeController : Controller
         // Create the JSON payload to POST to the Apple Pay merchant validation URL.
         var request = new MerchantSessionRequest()
         {
-            DisplayName = _options.StoreName,
+            DisplayName = options.Value.StoreName,
             Initiative = "web",
             InitiativeContext = Request.GetTypedHeaders().Host.Value,
-            MerchantIdentifier = _certificate.GetMerchantIdentifier(),
+            MerchantIdentifier = certificate.GetMerchantIdentifier(),
         };
 
-        JsonDocument merchantSession = await _client.GetMerchantSessionAsync(requestUri, request, cancellationToken);
+        JsonDocument merchantSession = await client.GetMerchantSessionAsync(requestUri, request, cancellationToken);
 
         // Return the merchant session as-is to the JavaScript as JSON.
         return Json(merchantSession.RootElement);

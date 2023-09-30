@@ -8,16 +8,9 @@ using Xunit.Abstractions;
 
 namespace ApplePayJS.Tests;
 
-internal sealed class BrowserFixture
+internal sealed class BrowserFixture(ITestOutputHelper? outputHelper)
 {
-    public BrowserFixture(ITestOutputHelper? outputHelper)
-    {
-        OutputHelper = outputHelper;
-    }
-
     private static bool IsRunningInGitHubActions { get; } = !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"));
-
-    private ITestOutputHelper? OutputHelper { get; }
 
     public async Task WithPageAsync(
         Func<IPage, Task> action,
@@ -32,8 +25,8 @@ internal sealed class BrowserFixture
 
         IPage page = await browser.NewPageAsync(options);
 
-        page.Console += (_, e) => OutputHelper?.WriteLine(e.Text);
-        page.PageError += (_, e) => OutputHelper?.WriteLine(e);
+        page.Console += (_, e) => outputHelper?.WriteLine(e.Text);
+        page.PageError += (_, e) => outputHelper?.WriteLine(e);
 
         try
         {
@@ -119,11 +112,11 @@ internal sealed class BrowserFixture
                 Path = path,
             });
 
-            OutputHelper?.WriteLine($"Screenshot saved to {path}.");
+            outputHelper?.WriteLine($"Screenshot saved to {path}.");
         }
         catch (Exception ex)
         {
-            OutputHelper?.WriteLine("Failed to capture screenshot: " + ex);
+            outputHelper?.WriteLine("Failed to capture screenshot: " + ex);
         }
     }
 
@@ -152,11 +145,11 @@ internal sealed class BrowserFixture
 
             File.Move(videoSource, videoDestination);
 
-            OutputHelper?.WriteLine($"Video saved to {videoDestination}.");
+            outputHelper?.WriteLine($"Video saved to {videoDestination}.");
         }
         catch (Exception ex)
         {
-            OutputHelper?.WriteLine("Failed to capture video: " + ex);
+            outputHelper?.WriteLine("Failed to capture video: " + ex);
         }
     }
 }
