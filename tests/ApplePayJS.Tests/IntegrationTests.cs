@@ -48,7 +48,7 @@ public class IntegrationTests(ITestOutputHelper outputHelper) : IAsyncLifetime
 
             // Act
             await page.ClearTextAsync(Selectors.Amount);
-            await page.TypeAsync(Selectors.Amount, "1.23");
+            await page.FillAsync(Selectors.Amount, "1.23");
 
             await page.ClickAsync(Selectors.Pay);
 
