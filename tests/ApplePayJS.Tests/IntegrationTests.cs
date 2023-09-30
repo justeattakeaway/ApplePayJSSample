@@ -9,17 +9,9 @@ using Xunit.Abstractions;
 
 namespace ApplePayJS.Tests;
 
-public class IntegrationTests : IAsyncLifetime
+public class IntegrationTests(ITestOutputHelper outputHelper) : IAsyncLifetime
 {
-    public IntegrationTests(ITestOutputHelper outputHelper)
-    {
-        Fixture = new TestFixture()
-        {
-            OutputHelper = outputHelper,
-        };
-    }
-
-    private TestFixture Fixture { get; }
+    private TestFixture Fixture { get; } = new() { OutputHelper = outputHelper };
 
     public Task InitializeAsync()
     {
@@ -54,17 +46,17 @@ public class IntegrationTests : IAsyncLifetime
             await page.GotoAsync(Fixture.ServerAddress.ToString());
             await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
 
-                // Act
-                await page.ClearTextAsync(Selectors.Amount);
+            // Act
+            await page.ClearTextAsync(Selectors.Amount);
             await page.TypeAsync(Selectors.Amount, "1.23");
 
             await page.ClickAsync(Selectors.Pay);
 
-                // Assert
-                await page.WaitForSelectorAsync(Selectors.CardName);
+            // Assert
+            await page.WaitForSelectorAsync(Selectors.CardName);
             await page.InnerTextAsync(Selectors.CardName).ShouldBe("American Express");
 
-            foreach (string selector in new[] { Selectors.BillingContact, Selectors.ShipingContact })
+            foreach (string selector in new[] { Selectors.BillingContact, Selectors.ShippingContact })
             {
                 var contact = await page.QuerySelectorAsync(selector);
                 contact.ShouldNotBeNull();
@@ -79,7 +71,7 @@ public class IntegrationTests : IAsyncLifetime
 
     private static void InstallPlaywright()
     {
-        int exitCode = Program.Main(new[] { "install" });
+        int exitCode = Program.Main(["install"]);
 
         if (exitCode != 0)
         {
@@ -94,6 +86,6 @@ public class IntegrationTests : IAsyncLifetime
         internal const string CardName = ".card-name";
         internal const string ContactName = ".contact-name";
         internal const string Pay = "id=apple-pay-button";
-        internal const string ShipingContact = "id=shipping-contact";
+        internal const string ShippingContact = "id=shipping-contact";
     }
 }

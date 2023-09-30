@@ -125,21 +125,14 @@ public class TestFixture : WebApplicationFactory<Program>, ITestOutputHelperAcce
         }
     }
 
-    private sealed class HttpRequestInterceptionFilter : IHttpMessageHandlerBuilderFilter
+    private sealed class HttpRequestInterceptionFilter(HttpClientInterceptorOptions options) : IHttpMessageHandlerBuilderFilter
     {
-        internal HttpRequestInterceptionFilter(HttpClientInterceptorOptions options)
-        {
-            Options = options;
-        }
-
-        private HttpClientInterceptorOptions Options { get; }
-
         public Action<HttpMessageHandlerBuilder> Configure(Action<HttpMessageHandlerBuilder> next)
         {
             return (builder) =>
             {
                 next(builder);
-                builder.AdditionalHandlers.Add(Options.CreateHttpMessageHandler());
+                builder.AdditionalHandlers.Add(options.CreateHttpMessageHandler());
             };
         }
     }
