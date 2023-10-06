@@ -2,6 +2,7 @@
   <PropertyGroup>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <AssemblyName>JustEat.ApplePayJS</AssemblyName>
+    <ChecksumAlgorithm>SHA256</ChecksumAlgorithm>
     <OutputType>Exe</OutputType>
     <PackageId>JustEat.ApplePayJS</PackageId>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
