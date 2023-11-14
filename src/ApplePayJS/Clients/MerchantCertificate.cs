@@ -8,14 +8,9 @@ using Microsoft.Extensions.Options;
 
 namespace JustEat.ApplePayJS.Clients;
 
-public class MerchantCertificate
+public class MerchantCertificate(IOptions<ApplePayOptions> options)
 {
-    private readonly ApplePayOptions _options;
-
-    public MerchantCertificate(IOptions<ApplePayOptions> options)
-    {
-        _options = options.Value;
-    }
+    private readonly ApplePayOptions _options = options.Value;
 
     public X509Certificate2 GetCertificate()
     {

@@ -67,7 +67,7 @@ if (($installDotNetSdk -eq $true) -And ($null -eq $env:TF_BUILD)) {
 }
 
 Write-Host "Publishing application..." -ForegroundColor Green
-& $dotnet publish (Join-Path $solutionPath "src" "ApplePayJS" "ApplePayJS.csproj") --output $OutputPath --configuration $Configuration
+& $dotnet publish (Join-Path $solutionPath "src" "ApplePayJS" "ApplePayJS.csproj") --output $OutputPath --configuration $Configuration --tl
 
 $additionalArgs = @()
 
@@ -77,7 +77,7 @@ if (![string]::IsNullOrEmpty($env:GITHUB_SHA)) {
 }
 
 Write-Host "Running tests..." -ForegroundColor Green
-& $dotnet test (Join-Path $solutionPath "tests" "ApplePayJS.Tests" "ApplePayJS.Tests.csproj") --output $OutputPath --configuration $Configuration $additionalArgs
+& $dotnet test (Join-Path $solutionPath "tests" "ApplePayJS.Tests" "ApplePayJS.Tests.csproj") --output $OutputPath --configuration $Configuration --tl $additionalArgs
 
 if ($LASTEXITCODE -ne 0) {
     throw "dotnet publish failed with exit code $LASTEXITCODE"
