@@ -12,30 +12,30 @@ This example integration shows a minimal sample of how to integrate Apple Pay in
 
 The key components to look at for the implementation are:
 
-* ```src\ApplePayJS\Views\Home\Index.cshtml``` - The view that renders the Apple Pay button.
-* ```src\ApplePayJS\wwwroot\css\site.css``` - The CSS used to style the Apple Pay button.
-* ```src\ApplePayJS\wwwroot\js\site.js``` - The JavaScript that performs the majority of the Apple Pay functionality.
-* ```src\ApplePayJS\Controllers\HomeController.cs``` - The controller that performs the POST to the Apple Pay service to verify a merchant session.
+* `src\ApplePayJS\Views\Home\Index.cshtml` - The view that renders the Apple Pay button.
+* `src\ApplePayJS\wwwroot\css\site.css` - The CSS used to style the Apple Pay button.
+* `src\ApplePayJS\wwwroot\js\site.js` - The JavaScript that performs the majority of the Apple Pay functionality.
+* `src\ApplePayJS\Controllers\HomeController.cs` - The controller that performs the POST to the Apple Pay service to verify a merchant session.
 
 ## Setup
 
 To setup the repository to run the sample, perform the steps below:
 
-  1. Install the latest [.NET 7 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2022 or Visual Studio Code.
+  1. Install the latest [.NET 8 SDK](https://www.microsoft.com/net/download/core), Visual Studio 2022 or Visual Studio Code.
   1. Fork this repository.
-  1. Clone the repository from your fork to your local machine: ```git clone https://github.com/{username}/ApplePayJSSample.git```
+  1. Clone the repository from your fork to your local machine: `git clone https://github.com/{username}/ApplePayJSSample.git`
   1. Restore the Bower, npm and NuGet packages.
   1. [Follow the steps](https://developer.apple.com/reference/applepayjs#2193397) to obtain your Apple Pay Merchant ID, Payment Processing Certificate, Domain Verification file and Merchant Identity Certificate if you do not already have them.
-  1. Place the Domain Verification file (```apple-developer-merchantid-domain-association```) in the ```src\ApplePayJS\wwwroot\.well-known``` folder.
-  1. Generate a ```.pfx``` file from your Merchant Identity Certificate (```merchant_id.cer```, which is the public key) and the Certificate Signing Request (```your_file_name.csr```, which is the private key) that you used to generate it.
-  1. Either add your ```.pfx``` file to the root of the application in ```src\ApplePayJS``` (but **not** in the ```wwwroot``` folder) or install it into the local certificate store.
-  1. Update the Apple touch icon (```src\ApplePayJS\wwwroot\apple-touch-icon.png```) and favicon (```src\ApplePayJS\wwwroot\favicon.ico```) to your own designs.
-  1. Configure the following settings as appropriate in either your environment variables or in ```src\ApplePayJS\appsettings.json```:
-      * ```ApplePay:StoreName```
-      * ```ApplePay:UseCertificateStore```
-      * ```ApplePay:MerchantCertificateThumbprint``` or ```ApplePay:MerchantCertificateFileName```
-  1. Configure the following setting in either your environment variables, your [user secrets](https://docs.asp.net/en/latest/security/app-secrets.html#secret-manager) or in ```src\ApplePayJS\appsettings.json``` (**not recommended**) if loading the ```.pfx``` file from disk (i.e. ```ApplePay:UseCertificateStore=false```):
-      * ```ApplePay:MerchantCertificatePassword```
+  1. Place the Domain Verification file (`apple-developer-merchantid-domain-association`) in the `src\ApplePayJS\wwwroot\.well-known` folder.
+  1. Generate a `.pfx` file from your Merchant Identity Certificate (`merchant_id.cer`, which is the public key) and the Certificate Signing Request (`your_file_name.csr`, which is the private key) that you used to generate it.
+  1. Either add your `.pfx` file to the root of the application in `src\ApplePayJS` (but **not** in the `wwwroot` folder) or install it into the local certificate store.
+  1. Update the Apple touch icon (`src\ApplePayJS\wwwroot\apple-touch-icon.png`) and favicon (`src\ApplePayJS\wwwroot\favicon.ico`) to your own designs.
+  1. Configure the following settings as appropriate in either your environment variables or in `src\ApplePayJS\appsettings.json`:
+      * `ApplePay:StoreName`
+      * `ApplePay:UseCertificateStore`
+      * `ApplePay:MerchantCertificateThumbprint` or `ApplePay:MerchantCertificateFileName`
+  1. Configure the following setting in either your environment variables, your [user secrets](https://docs.asp.net/en/latest/security/app-secrets.html#secret-manager) or in `src\ApplePayJS\appsettings.json` (**not recommended**) if loading the `.pfx` file from disk (i.e. `ApplePay:UseCertificateStore=false`):
+      * `ApplePay:MerchantCertificatePassword`
   1. Deploy the application to the hosting environment for the domain where you wish to use Apple Pay JS.
   1. Verify the domain in the [Apple Developer Portal](https://developer.apple.com/account/).
 
@@ -51,11 +51,12 @@ If you are deploying the sample application to a Microsoft Azure App Service Web
 
 * Navigate to the _Private Key Certificates (.pfx)_ tab of your Web App's _TLS/SSL Settings_ blade and upload your Apple Merchant certificate as a `.pfx` file, making a note of the _Thumbprint_ value.
 * Navigate to the _Configuration_ blade of your Web App and add the following settings:
-  * **WEBSITE_LOAD_CERTIFICATES** to the value of _Thumbprint_ you noted above.
-  * **ApplePay:MerchantCertificateThumbprint** to the value of _Thumbprint_ you noted above.
-  * **ApplePay:UseCertificateStore** to the value of _true_.
+  * `WEBSITE_LOAD_USER_PROFILE` to a value of `1`.
+  * `WEBSITE_LOAD_CERTIFICATES` to the value of _Thumbprint_ you noted above.
+  * `ApplePay:MerchantCertificateThumbprint` to the value of _Thumbprint_ you noted above.
+  * `ApplePay:UseCertificateStore` to the value of `true`.
   * Save the changes.
-* Ensure the hostname you are using (either ```{yourappname}.azurewebsites.net``` or a custom hostname that you have set up) has been added in the Apple Developer portal to your merchant ID and you've added the Apple Pay domain validation file as described in the _Setup_ section above.
+* Ensure the hostname you are using (either `{yourappname}.azurewebsites.net` or a custom hostname that you have set up) has been added in the Apple Developer portal to your merchant ID and you've added the Apple Pay domain validation file as described in the _Setup_ section above.
 
 ## Feedback
 
