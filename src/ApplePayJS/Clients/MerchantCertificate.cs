@@ -62,7 +62,7 @@ public class MerchantCertificate(IOptions<ApplePayOptions> options)
 
         return X509Certificate2.GetCertContentType(rawData) switch
         {
-            X509ContentType.Pfx => X509CertificateLoader.LoadPkcs12FromFile(rawData, password),
+            X509ContentType.Pfx => X509CertificateLoader.LoadPkcs12(rawData, password),
             _ => throw new NotSupportedException("The format of the encoded Apple Pay merchant certificate is not supported."),
         };
     }
