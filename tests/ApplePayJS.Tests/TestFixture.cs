@@ -64,7 +64,7 @@ public class TestFixture : WebApplicationFactory<Program>, ITestOutputHelperAcce
 
         builder.ConfigureKestrel(
             (kestrelOptions) => kestrelOptions.ConfigureHttpsDefaults(
-                (connectionOptions) => connectionOptions.ServerCertificate = new X509Certificate2("localhost-dev.pfx", "Pa55w0rd!")));
+                (connectionOptions) => connectionOptions.ServerCertificate = X509CertificateLoader.LoadPkcs12FromFile("localhost-dev.pfx", "Pa55w0rd!")));
 
         // Configure the server address for the server to listen on for HTTP requests
         builder.UseUrls("https://127.0.0.1:0");
