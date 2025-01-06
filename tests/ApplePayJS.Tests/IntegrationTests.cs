@@ -5,7 +5,6 @@ using JustEat.HttpClientInterception;
 using Microsoft.Playwright;
 using Shouldly;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace ApplePayJS.Tests;
 
@@ -13,18 +12,20 @@ public class IntegrationTests(ITestOutputHelper outputHelper) : IAsyncLifetime
 {
     private TestFixture Fixture { get; } = new() { OutputHelper = outputHelper };
 
-    public Task InitializeAsync()
+    public ValueTask InitializeAsync()
     {
         InstallPlaywright();
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         if (Fixture != null)
         {
             await Fixture.DisposeAsync();
         }
+
+        GC.SuppressFinalize(this);
     }
 
     [Fact]

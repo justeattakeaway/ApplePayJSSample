@@ -11,7 +11,8 @@ namespace ApplePayJS.Tests;
 
 public static class MerchantCertificateGenerator
 {
-    [Fact(Skip = "Enable this test to generate a new dummy Apple Pay merchant certificate to use for the tests.")]
+    // Explicitly run this test to generate a new dummy Apple Pay merchant certificate to use for the tests.
+    [Fact(Explicit = true)]
     [SupportedOSPlatform("windows")]
     public static async Task Generate_Fake_Apple_Pay_Merchant_Certificate()
     {
@@ -42,6 +43,6 @@ public static class MerchantCertificateGenerator
         byte[] pfxBytes = certificate.Export(X509ContentType.Pfx, certificatePassword);
 
         File.Delete(certificateFileName);
-        await File.WriteAllBytesAsync(certificateFileName, pfxBytes);
+        await File.WriteAllBytesAsync(certificateFileName, pfxBytes, TestContext.Current.CancellationToken);
     }
 }
