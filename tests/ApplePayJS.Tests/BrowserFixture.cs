@@ -4,7 +4,7 @@
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Microsoft.Playwright;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace ApplePayJS.Tests;
 
