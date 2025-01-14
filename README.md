@@ -1,6 +1,6 @@
 # Apple Pay JS Example Integration
 
-[![Build status](https://github.com/justeattakeaway/ApplePayJSSample/workflows/build/badge.svg?branch=main&event=push)](https://github.com/justeattakeaway/ApplePayJSSample/actions?query=workflow%3Abuild+branch%3Amain+event%3Apush)
+[![Build status](https://github.com/justeattakeaway/ApplePayJSSample/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/justeattakeaway/ApplePayJSSample/actions/workflows/build.yml?query=branch%3Amain+event%3Apush)
 
 This repository contains a sample implementation of [Apple Pay JS](https://developer.apple.com/reference/applepayjs/) using ASP.NET Core 8 written in C# and JavaScript.
 
