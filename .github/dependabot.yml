@@ -3,8 +3,7 @@ updates:
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
-    interval: daily
-    time: "05:30"
+    interval: monthly
     timezone: Europe/London
 - package-ecosystem: nuget
   directory: "/"
@@ -13,7 +12,6 @@ updates:
       patterns:
         - xunit*
   schedule:
-    interval: daily
-    time: "05:30"
+    interval: monthly
     timezone: Europe/London
   open-pull-requests-limit: 99
